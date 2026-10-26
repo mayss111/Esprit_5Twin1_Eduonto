@@ -4,18 +4,37 @@ Lancement (depuis le dossier backend) :
     uvicorn app.main:app --reload --port 8000
 Documentation interactive : http://localhost:8000/docs
 """
+import base64
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import store
+from .nlp.translator import get_translator
 from .routers import generic, membre1, membre2, membre3, membre4, membre5, membre6, nlp
 
 app = FastAPI(title="EduOnto API", version="1.0",
               description="Back-end du projet Web Sémantique : ontologie EduOnto, SPARQL et questions en langage naturel.")
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"], allow_methods=["*"], allow_headers=["*"],
+                   expose_headers=["X-Sparql"])
 
 source = store.load()
+translator = get_translator()     # spaCy (+ zero-shot si EDUONTO_HF=1) chargés au démarrage, pas à la 1re question
+
+
+@app.middleware("http")
+async def entete_sparql(request: Request, call_next):
+    """Renvoie dans l'en-tête X-Sparql (base64 UTF-8) les requêtes SPARQL exécutées pour cette requête HTTP."""
+    journal = []
+    jeton = store.journal_sparql.set(journal)
+    try:
+        response = await call_next(request)
+    finally:
+        store.journal_sparql.reset(jeton)
+    if journal:
+        response.headers["X-Sparql"] = base64.b64encode("\n\n".join(journal).encode("utf-8")).decode("ascii")
+    return response
 
 
 @app.exception_handler(ValueError)
@@ -29,7 +48,8 @@ for r in (generic, membre1, membre2, membre3, membre4, membre5, membre6, nlp):
 
 @app.get("/api/health")
 def health():
-    return {"ontologie": source, "triplets": len(store.graph)}
+    return {"ontologie": source, "triplets": len(store.graph),
+            "modele_spacy": translator.model, "zero_shot": translator.zero_shot is not None}
 
 
 @app.post("/api/reload")

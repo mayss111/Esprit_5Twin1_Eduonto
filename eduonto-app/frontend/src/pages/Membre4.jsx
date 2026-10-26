@@ -37,6 +37,7 @@ export default function Membre4() {
       <h3>Requêtes SPARQL</h3>
       <QueryCard titre="Évaluations au-dessus d'une note (FILTER)" url="/api/m4/evaluations" query={{ noteMin: 12 }} />
       <QueryCard titre="Évaluations d'une session (Principale / Rattrapage)" url="/api/m4/evaluations/session/{session}" params={{ session: "Rattrapage" }} />
+      <QueryCard titre="Moyenne pondérée par étudiant (SUM coef / GROUP BY)" url="/api/m4/moyennes-ponderees" query={{ etudiant: "" }} />
       <QueryCard titre="Relevé de notes d'un étudiant (mention calculée par BIND + IF)" url="/api/m4/etudiants/{etudiant}/releve" params={{ etudiant: "Ahmed" }} />
       <QueryCard titre="Recherche de preuves (CONTAINS)" url="/api/m4/preuves" query={{ recherche: "esprit" }} />
       <QueryCard titre="Preuves expirées (date < aujourd'hui)" url="/api/m4/preuves-expirees" />

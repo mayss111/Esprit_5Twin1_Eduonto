@@ -3,7 +3,9 @@
 Toutes les opérations (lecture, ajout, modification, suppression) passent par
 SPARQL 1.1 (SELECT / INSERT / DELETE), exécuté par rdflib.
 """
+import logging
 import re
+from contextvars import ContextVar
 from pathlib import Path
 from threading import RLock
 
@@ -27,6 +29,40 @@ BASE = ONTO_DIR / "EduOnto.owl"                # ontologie d'origine (Protégé)
 _ID = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _lock = RLock()   # rdflib n'est pas thread-safe : une requête à la fois
 graph = Graph()
+log = logging.getLogger("eduonto.store")
+
+# Abonnés appelés après chaque modification du graphe (ex. : reconstruire le lexique NLP)
+_abonnes = []
+
+# Journal des requêtes SPARQL exécutées pendant la requête HTTP en cours.
+# On stocke une LISTE (objet mutable) : les ajouts faits dans le threadpool de FastAPI
+# (copie du contexte) restent visibles par le middleware qui a créé la liste.
+journal_sparql: ContextVar = ContextVar("journal_sparql", default=None)
+
+
+def on_change(fn):
+    """Abonne une fonction, appelée sans argument après chaque update() et load()."""
+    _abonnes.append(fn)
+    return fn
+
+
+def _notifier():
+    """Prévient les abonnés ; une erreur d'abonné est loguée mais ne fait pas échouer la requête."""
+    jeton = journal_sparql.set(None)     # leurs requêtes internes ne doivent pas apparaître dans X-Sparql
+    try:
+        for fn in list(_abonnes):
+            try:
+                fn()
+            except Exception:
+                log.exception("Erreur dans l'abonné %r", fn)
+    finally:
+        journal_sparql.reset(jeton)
+
+
+def _journaliser(query: str):
+    journal = journal_sparql.get()
+    if journal is not None:
+        journal.append(query.strip())
 
 
 def load():
@@ -36,6 +72,7 @@ def load():
         for path in (RUNTIME, INFERRED, BASE):
             if path.exists():
                 graph.parse(str(path), format="turtle" if path.suffix == ".ttl" else "xml")
+                _notifier()
                 return path.name
     raise FileNotFoundError("Aucun fichier d'ontologie trouvé dans le dossier ontology/")
 
@@ -60,6 +97,7 @@ def local(value):
 def select(query: str) -> list[dict]:
     """Exécute un SELECT et renvoie une liste de dictionnaires {variable: valeur}."""
     with _lock:
+        _journaliser(query)
         res = graph.query(PREFIXES + query)
         return [{str(k): local(row[k]) for k in res.vars if row[k] is not None} for row in res]
 
@@ -67,8 +105,10 @@ def select(query: str) -> list[dict]:
 def update(query: str):
     """Exécute un INSERT / DELETE puis sauvegarde l'état."""
     with _lock:
+        _journaliser(query)
         graph.update(PREFIXES + query)
         graph.serialize(str(RUNTIME), format="turtle")
+        _notifier()
 
 
 # ---------- outils pour construire des requêtes sûres ----------

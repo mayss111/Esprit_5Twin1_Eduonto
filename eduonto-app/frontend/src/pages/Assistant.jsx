@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../api.js";
 import ResultTable from "../components/ResultTable.jsx";
 
@@ -13,6 +13,8 @@ const EXEMPLES = [
   "Quelle est la moyenne des notes par cours ?",                         // M4
   "Quels badges a obtenu Sarra ?",                                       // M4
   "Quelles sont les notes d'Omar ?",                                      // M4
+  "Quelle est la moyenne d'Ahmed ?",                                     // M4
+  "Comment se sont passés les examens ?",                                // M4 (repli zero-shot)
   "Quels agents IA sont fiables ?",                                      // M5
   "Quels étudiants sont à risque de décrochage ?",                       // M6
   "Liste les cours",                                                     // commun
@@ -23,6 +25,9 @@ export default function Assistant() {
   const [rep, setRep] = useState(null);
   const [erreur, setErreur] = useState("");
   const [chargement, setChargement] = useState(false);
+  const [sante, setSante] = useState(null);   // modèle spaCy + zero-shot actif (GET /api/health)
+
+  useEffect(() => { api.get("/api/health").then(setSante).catch(() => setSante(null)); }, []);
 
   async function poser(q = question) {
     if (!q.trim()) return;
@@ -42,6 +47,14 @@ export default function Assistant() {
   return (
     <div>
       <h2>Assistant EduOnto · question en langage naturel</h2>
+      {sante && (
+        <p className="muted">
+          Modèle spaCy : <code>{sante.modele_spacy}</code> ·{" "}
+          {sante.zero_shot
+            ? <span className="badge ok">zero-shot Hugging Face actif</span>
+            : <span className="badge">zero-shot inactif (EDUONTO_HF=1 pour l'activer)</span>}
+        </p>
+      )}
       <div className="row">
         <input className="grow" value={question} onChange={(e) => setQuestion(e.target.value)}
                onKeyDown={(e) => e.key === "Enter" && poser()} placeholder="Posez une question sur l'ontologie…" />
@@ -63,6 +76,12 @@ export default function Assistant() {
             <p><b>Entités reconnues :</b></p>
             <ResultTable rows={rep.entites} />
             <p><b>Paramètres :</b> <code>{JSON.stringify(rep.parametres)}</code></p>
+            {rep.methode?.startsWith("zero-shot") && rep.scores_zero_shot?.length > 0 && (
+              <>
+                <p><b>Scores zero-shot (3 meilleures intentions) :</b></p>
+                <ResultTable rows={rep.scores_zero_shot} />
+              </>
+            )}
           </div>
           <div className="card">
             <h4>Requête SPARQL générée</h4>

@@ -4,6 +4,7 @@ Requêtes SPARQL de ce membre (CRUD, filtres, recherche, agrégats) :
   READ    GET  /api/m4/evaluations?noteMin=12            filtre numérique (FILTER >=)
   READ    GET  /api/m4/evaluations/session/{session}      filtre sur une énumération (Principale / Rattrapage)
   READ    GET  /api/m4/statistiques                       agrégats AVG / MIN / MAX / COUNT + GROUP BY
+  READ    GET  /api/m4/moyennes-ponderees?etudiant=Ahmed  moyenne pondérée SUM(note×coef)/SUM(coef) + Admis/Ajourné
   READ    GET  /api/m4/etudiants/{etudiant}/releve        relevé de notes + mention calculée (BIND + IF)
   READ    GET  /api/m4/preuves?recherche=esprit           recherche plein texte (CONTAINS sur plusieurs champs)
   READ    GET  /api/m4/preuves-expirees                   comparaison de dates (dateExpiration < aujourd'hui)
@@ -74,6 +75,28 @@ def statistiques():
         }
         GROUP BY ?cours
         ORDER BY DESC(?moyenne)""")
+
+
+@router.get("/moyennes-ponderees")
+def moyennes_ponderees(etudiant: str | None = None):
+    """Moyenne pondérée par étudiant (SUM(note × coef) / SUM(coef), coef = 1 par défaut)
+    et décision Admis / Ajourné calculée dans la requête (sous-requête + BIND + IF)."""
+    filtre = f"VALUES ?etudiant {{ edu:{check_id(etudiant)} }}" if etudiant else ""
+    return select(f"""
+        SELECT ?etudiant ?moyennePonderee ?nbEvaluations ?decision WHERE {{
+          {{
+            SELECT ?etudiant (ROUND(SUM(?note * ?coef) / SUM(?coef) * 100) / 100 AS ?moyennePonderee)
+                   (COUNT(?evaluation) AS ?nbEvaluations)
+            WHERE {{
+              {filtre}
+              ?etudiant edu:aPasse ?evaluation .
+              ?evaluation edu:note ?note .
+              OPTIONAL {{ ?evaluation edu:coefficient ?coefficient }}
+              BIND(COALESCE(?coefficient, 1) AS ?coef)
+            }} GROUP BY ?etudiant
+          }}
+          BIND(IF(?moyennePonderee >= 10, "Admis", "Ajourné") AS ?decision)
+        }} ORDER BY DESC(?moyennePonderee)""")
 
 
 @router.get("/etudiants/{etudiant}/releve")
