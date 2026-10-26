@@ -5,7 +5,7 @@ SPARQL 1.1 (SELECT / INSERT / DELETE), exécuté par rdflib.
 """
 import re
 from pathlib import Path
-from threading import Lock
+from threading import RLock
 
 from rdflib import Graph, Literal, URIRef
 from rdflib.namespace import OWL, RDF, RDFS, XSD
@@ -25,17 +25,18 @@ INFERRED = ONTO_DIR / "EduOnto_inferred.owl"   # ontologie + déductions HermiT
 BASE = ONTO_DIR / "EduOnto.owl"                # ontologie d'origine (Protégé)
 
 _ID = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
-_lock = Lock()
+_lock = RLock()   # rdflib n'est pas thread-safe : une requête à la fois
 graph = Graph()
 
 
 def load():
     """Charge la version la plus récente disponible de l'ontologie."""
-    graph.remove((None, None, None))
-    for path in (RUNTIME, INFERRED, BASE):
-        if path.exists():
-            graph.parse(str(path), format="turtle" if path.suffix == ".ttl" else "xml")
-            return path.name
+    with _lock:
+        graph.remove((None, None, None))
+        for path in (RUNTIME, INFERRED, BASE):
+            if path.exists():
+                graph.parse(str(path), format="turtle" if path.suffix == ".ttl" else "xml")
+                return path.name
     raise FileNotFoundError("Aucun fichier d'ontologie trouvé dans le dossier ontology/")
 
 
@@ -58,8 +59,9 @@ def local(value):
 
 def select(query: str) -> list[dict]:
     """Exécute un SELECT et renvoie une liste de dictionnaires {variable: valeur}."""
-    res = graph.query(PREFIXES + query)
-    return [{str(k): local(row[k]) for k in res.vars if row[k] is not None} for row in res]
+    with _lock:
+        res = graph.query(PREFIXES + query)
+        return [{str(k): local(row[k]) for k in res.vars if row[k] is not None} for row in res]
 
 
 def update(query: str):

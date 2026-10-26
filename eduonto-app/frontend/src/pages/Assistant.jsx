@@ -10,6 +10,9 @@ const EXEMPLES = [
   "Quelles compétences requiert le métier de développeur full-stack ?",  // M3
   "Quelles compétences manquent à Ahmed ?",                              // M3
   "Quelles évaluations ont une note supérieure à 12 ?",                  // M4
+  "Quelle est la moyenne des notes par cours ?",                         // M4
+  "Quels badges a obtenu Sarra ?",                                       // M4
+  "Quelles sont les notes d'Omar ?",                                      // M4
   "Quels agents IA sont fiables ?",                                      // M5
   "Quels étudiants sont à risque de décrochage ?",                       // M6
   "Liste les cours",                                                     // commun

@@ -52,3 +52,14 @@ code.url { display: block; color: var(--muted); font-size: 12px; margin-bottom: 
   .span2 { grid-column: auto; }
   main { padding: 16px; }
 }
+
+/* ---- Membre 4 : barres de moyenne et badges ---- */
+.barre { display: grid; grid-template-columns: 110px 1fr 90px; gap: 10px; align-items: center; margin-bottom: 8px; font-size: 13px; }
+.barre-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.barre-fond { background: #eef1f6; border-radius: 4px; height: 14px; overflow: hidden; }
+.barre-valeur { height: 100%; border-radius: 4px; }
+.barre-valeur.ok { background: var(--primary); }
+.barre-valeur.ko { background: var(--danger); }
+.barre-chiffre { font-variant-numeric: tabular-nums; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; }
+.badge.ok { background: #dcfce7; color: #166534; }
