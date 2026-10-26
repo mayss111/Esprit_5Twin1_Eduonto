@@ -25,6 +25,26 @@ INTENTS = [
   ?evaluation edu:note ?note .
 }} GROUP BY ?cours ORDER BY DESC(?moyenne)"""},
 
+    # « Quelle est la moyenne d'Ahmed ? » — même mot-clé que moyenne_notes, mais avec un slot rempli :
+    # le traducteur la préfère dès qu'un étudiant est nommé.
+    {"name": "moyenne_etudiant", "membre": 4, "description": "la moyenne pondérée d'un étudiant (admis ou ajourné)",
+     "keywords": ["moyenne", "ponderee", "generale", "admis", "ajourne"],
+     "slots": {"etudiant": "Etudiant"},
+     "template": """SELECT ?etudiant ?moyennePonderee ?nbEvaluations ?decision WHERE {{
+  {{
+    SELECT ?etudiant (ROUND(SUM(?note * ?coef) / SUM(?coef) * 100) / 100 AS ?moyennePonderee)
+           (COUNT(?evaluation) AS ?nbEvaluations)
+    WHERE {{
+      VALUES ?etudiant {{ edu:{etudiant} }}
+      ?etudiant edu:aPasse ?evaluation .
+      ?evaluation edu:note ?note .
+      OPTIONAL {{ ?evaluation edu:coefficient ?coefficient }}
+      BIND(COALESCE(?coefficient, 1) AS ?coef)
+    }} GROUP BY ?etudiant
+  }}
+  BIND(IF(?moyennePonderee >= 10, "Admis", "Ajourné") AS ?decision)
+}}"""},
+
     # « Quelles évaluations sont en session de rattrapage ? »
     {"name": "evaluations_rattrapage", "membre": 4, "description": "les évaluations de la session de rattrapage",
      "keywords": ["rattrapage", "rattrapages", "session"],

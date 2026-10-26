@@ -18,6 +18,7 @@ from spacy.util import filter_spans
 from .. import store
 from .intents import ALL_INTENTS
 
+HF_MODEL = "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli"   # zero-shot multilingue (français compris)
 LABEL_PROPS = ["prenom", "nom", "intitule", "intituleFormation", "libelleCompetence",
                "intituleMetier", "libelleDomaine", "titre", "nomParcours"]
 
@@ -41,32 +42,51 @@ class Translator:
         except OSError:                                   # modèle non installé : tokeniseur seul
             self.nlp = spacy.blank("fr")
             self.model = "spacy.blank('fr')"
-        self.zero_shot = None
+        self.zero_shot = self.load_zero_shot()
         self.build_lexicon()
+        store.on_change(self.build_lexicon)               # lexique à jour après chaque INSERT / DELETE / rechargement
+
+    def load_zero_shot(self):
+        """Charge le modèle zero-shot dès le démarrage si EDUONTO_HF=1 (sinon, ou si transformers manque : None)."""
+        if os.getenv("EDUONTO_HF") != "1":
+            return None
+        try:
+            from transformers import pipeline
+            return pipeline("zero-shot-classification", model=HF_MODEL)
+        except Exception as e:                            # transformers absent, pas de réseau…
+            print(f"[EduOnto] zero-shot désactivé : {str(e).splitlines()[0]}")
+            return None
 
     # ---------- 3. lexique des entités, construit depuis l'ontologie ----------
     def build_lexicon(self):
-        self.matcher = PhraseMatcher(self.nlp.vocab, attr="LOWER")
-        self.entity_types = {}                            # id -> {classes de l'individu (et ancêtres)}
+        """Reconstruit le lexique à partir de zéro, puis remplace l'ancien d'un coup
+        (une question traitée en parallèle utilise l'ancien ou le nouveau, jamais un lexique à moitié construit)."""
+        matcher = PhraseMatcher(self.nlp.vocab, attr="LOWER")
+        entity_types = {}                                 # id -> {classes de l'individu (et ancêtres)}
         rows = store.select("""
             SELECT ?i ?c WHERE { ?i a owl:NamedIndividual ; a ?t . ?t rdfs:subClassOf* ?c . FILTER(isIRI(?c)) }""")
         for r in rows:
-            self.entity_types.setdefault(r["i"], set()).add(r["c"])
-        for ident in self.entity_types:
-            phrases = {normalize(split_camel(ident))}
-            for p in LABEL_PROPS:
-                for r in store.select(f"SELECT ?v WHERE {{ edu:{ident} edu:{p} ?v }}"):
-                    phrases.add(normalize(str(r["v"])))
-            self.matcher.add("IND|" + ident, [self.nlp.make_doc(ph) for ph in phrases if len(ph) > 2])
+            entity_types.setdefault(r["i"], set()).add(r["c"])
+        labels = {}                                       # id -> libellés (prenom, intitule…), en une seule requête
+        valeurs = " ".join(f"edu:{p}" for p in LABEL_PROPS)
+        for r in store.select(f"SELECT ?i ?v WHERE {{ VALUES ?p {{ {valeurs} }} ?i ?p ?v }}"):
+            labels.setdefault(r["i"], set()).add(normalize(str(r["v"])))
+        for ident in entity_types:
+            phrases = {normalize(split_camel(ident))} | labels.get(ident, set())
+            patterns = [self.nlp.make_doc(ph) for ph in phrases if len(ph) > 2]
+            if patterns:
+                matcher.add("IND|" + ident, patterns)
         for r in store.select("SELECT ?c WHERE { ?c a owl:Class . FILTER(isIRI(?c)) }"):
             words = normalize(split_camel(r["c"]))
-            self.matcher.add("CLS|" + r["c"], [self.nlp.make_doc(words), self.nlp.make_doc(words + "s")])
+            matcher.add("CLS|" + r["c"], [self.nlp.make_doc(words), self.nlp.make_doc(words + "s")])
+        self.matcher, self.entity_types = matcher, entity_types
 
     def entities(self, doc):
-        spans = [doc[s:e] for _, s, e in self.matcher(doc)]
+        matcher = self.matcher                            # même lexique pendant toute l'analyse
+        spans = [doc[s:e] for _, s, e in matcher(doc)]
         found = []
         for span in filter_spans(spans):                  # garde les correspondances les plus longues
-            for mid, s, e in self.matcher(doc):
+            for mid, s, e in matcher(doc):
                 if s == span.start and e == span.end:
                     kind, ident = self.nlp.vocab.strings[mid].split("|", 1)
                     found.append({"texte": span.text, "id": ident,
@@ -98,16 +118,16 @@ class Translator:
         return values
 
     def zero_shot_choice(self, question, candidates):
-        """Repli optionnel (EDUONTO_HF=1) : classification zero-shot Hugging Face."""
-        if os.getenv("EDUONTO_HF") != "1" or not candidates:
-            return None
-        if self.zero_shot is None:
-            from transformers import pipeline
-            self.zero_shot = pipeline("zero-shot-classification", model="MoritzLaurer/mDeBERTa-v3-base-mnli-xnli")
+        """Repli optionnel (EDUONTO_HF=1) : classification zero-shot Hugging Face.
+        Renvoie (meilleur candidat ou None, 3 meilleurs scores [{intention, score}])."""
+        if self.zero_shot is None or not candidates:
+            return None, []
         labels = [c[0]["description"] for c in candidates]
         res = self.zero_shot(question, labels, hypothesis_template="Cette question porte sur {}.")
+        top = [{"intention": candidates[labels.index(l)][0]["name"], "score": round(float(s), 3)}
+               for l, s in zip(res["labels"][:3], res["scores"][:3])]
         best = labels.index(res["labels"][0])
-        return candidates[best] if res["scores"][0] > 0.4 else None
+        return (candidates[best] if res["scores"][0] > 0.4 else None), top
 
     # ---------- pipeline complet ----------
     def translate(self, question: str) -> dict:
@@ -123,23 +143,32 @@ class Translator:
             if slots is None:
                 continue
             candidates.append((intent, slots, self.keyword_score(intent, text, lemmas)))
-        candidates.sort(key=lambda c: c[2], reverse=True)
+        # à score égal, l'intention la plus précise (le plus de slots remplis) passe devant :
+        # « moyenne d'Ahmed » -> moyenne_etudiant plutôt que moyenne_notes
+        candidates.sort(key=lambda c: (c[2], len(c[1])), reverse=True)
 
         methode = "mots-clés"
+        scores_zs = []
         best = candidates[0] if candidates and candidates[0][2] > 0 else None
         if best is None:
-            best = self.zero_shot_choice(question, candidates)
+            best, scores_zs = self.zero_shot_choice(question, candidates)
             methode = "zero-shot (Hugging Face)"
         if best is None:
-            return {"question": question, "intention": None, "entites": ents, "sparql": None,
-                    "message": "Question non comprise. Reformulez avec un nom de l'ontologie (ex. Ahmed, Angular)."}
+            rep = {"question": question, "intention": None, "entites": ents, "sparql": None,
+                   "message": "Question non comprise. Reformulez avec un nom de l'ontologie (ex. Ahmed, Angular)."}
+            if scores_zs:
+                rep["scores_zero_shot"] = scores_zs
+            return rep
 
         intent, slots = best[0], best[1]
         sparql = intent["template"].format(**{k: (int(v) if isinstance(v, float) and v.is_integer() else v)
                                               for k, v in slots.items()})
-        return {"question": question, "intention": intent["name"], "membre": intent["membre"],
-                "methode": methode, "modele_spacy": self.model, "entites": ents,
-                "parametres": slots, "sparql": sparql.strip()}
+        rep = {"question": question, "intention": intent["name"], "membre": intent["membre"],
+               "methode": methode, "modele_spacy": self.model, "entites": ents,
+               "parametres": slots, "sparql": sparql.strip()}
+        if scores_zs:
+            rep["scores_zero_shot"] = scores_zs
+        return rep
 
 
 translator = None

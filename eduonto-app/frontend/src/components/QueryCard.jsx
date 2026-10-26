@@ -12,6 +12,7 @@ import ResultTable from "./ResultTable.jsx";
 export default function QueryCard({ titre, url, params = {}, query = {} }) {
   const [valeurs, setValeurs] = useState({ ...params, ...query });
   const [rows, setRows] = useState(null);
+  const [sparql, setSparql] = useState("");
   const [erreur, setErreur] = useState("");
 
   async function lancer() {
@@ -23,9 +24,12 @@ export default function QueryCard({ titre, url, params = {}, query = {} }) {
       .join("&");
     if (qs) chemin += `?${qs}`;
     try {
-      setRows(await api.get(chemin));
+      const { data, sparql } = await api.getAvecSparql(chemin);
+      setRows(data);
+      setSparql(sparql);
     } catch (e) {
       setErreur(e.message);
+      setSparql("");
     }
   }
 
@@ -44,6 +48,12 @@ export default function QueryCard({ titre, url, params = {}, query = {} }) {
       <code className="url">GET {url}</code>
       {erreur && <p className="error">{erreur}</p>}
       <ResultTable rows={rows} />
+      {sparql && (
+        <details>
+          <summary>Voir la requête SPARQL</summary>
+          <pre>{sparql}</pre>
+        </details>
+      )}
     </div>
   );
 }

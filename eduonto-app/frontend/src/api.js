@@ -12,8 +12,24 @@ async function request(method, url, body) {
   return data;
 }
 
+// L'en-tête X-Sparql contient, en base64 UTF-8, les requêtes SPARQL exécutées par le back-end.
+// atob donne des octets : TextDecoder les remet en texte UTF-8 (sinon les accents sont cassés).
+function decoderSparql(entete) {
+  if (!entete) return "";
+  const octets = Uint8Array.from(atob(entete), (c) => c.charCodeAt(0));
+  return new TextDecoder("utf-8").decode(octets);
+}
+
+async function getAvecSparql(url) {
+  const res = await fetch(url);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.detail ? JSON.stringify(data.detail) : `Erreur ${res.status}`);
+  return { data, sparql: decoderSparql(res.headers.get("X-Sparql")) };
+}
+
 export const api = {
   get: (url) => request("GET", url),
+  getAvecSparql,
   post: (url, body) => request("POST", url, body),
   put: (url, body) => request("PUT", url, body),
   del: (url) => request("DELETE", url),
