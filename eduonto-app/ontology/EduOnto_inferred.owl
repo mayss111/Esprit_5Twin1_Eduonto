@@ -1,0 +1,3312 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://www.esprit.tn/ontologies/eduonto"
+         xmlns="http://www.esprit.tn/ontologies/eduonto#">
+
+<owl:Ontology rdf:about="http://www.esprit.tn/ontologies/eduonto"/>
+
+<owl:ObjectProperty rdf:about="#aPourPrerequis">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="#Cours"/>
+  <owl:inverseOf rdf:resource="#estPrerequisDe"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#estPrerequisDe">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="#Cours"/>
+  <owl:inverseOf rdf:resource="#aPourPrerequis"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#enseigne">
+  <rdfs:domain rdf:resource="#Enseignant"/>
+  <rdfs:range rdf:resource="#Cours"/>
+  <owl:inverseOf rdf:resource="#estEnseignePar"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#estEnseignePar">
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="#Enseignant"/>
+  <owl:inverseOf rdf:resource="#enseigne"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#contientCours">
+  <rdfs:domain rdf:resource="#Formation"/>
+  <rdfs:range rdf:resource="#Cours"/>
+  <owl:inverseOf rdf:resource="#faitPartieDe"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#faitPartieDe">
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="#Formation"/>
+  <owl:inverseOf rdf:resource="#contientCours"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#encadre">
+  <rdfs:domain rdf:resource="#Enseignant"/>
+  <rdfs:range rdf:resource="#Etudiant"/>
+  <owl:inverseOf rdf:resource="#estEncadrePar"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#estEncadrePar">
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="#Enseignant"/>
+  <owl:inverseOf rdf:resource="#encadre"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#estResponsableDe">
+  <rdfs:domain rdf:resource="#Personne"/>
+  <rdfs:range rdf:resource="#Formation"/>
+  <owl:inverseOf rdf:resource="#aPourResponsable"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#aPourResponsable">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Formation"/>
+  <rdfs:range rdf:resource="#Personne"/>
+  <owl:inverseOf rdf:resource="#estResponsableDe"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#estComplementaireDe">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="#Cours"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#developpeCompetence">
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="#Competence"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#necessiteCompetence">
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="#Competence"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#possedeCompetence">
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="#Competence"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#inscritA">
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="#Formation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#aValide">
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="#Cours"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#aPasse">
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="#Evaluation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#suitParcours">
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="#ParcoursApprentissage"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#proposeParcours">
+  <rdfs:domain rdf:resource="#Formation"/>
+  <rdfs:range rdf:resource="#ParcoursApprentissage"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#comprendCours">
+  <rdfs:domain rdf:resource="#ParcoursApprentissage"/>
+  <rdfs:range rdf:resource="#Cours"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#estEvaluePar">
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="#Evaluation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#utiliseRessource">
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="#RessourcePedagogique"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#appartientADomaine">
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="#Domaine"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#concerne">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#IndicateurApprentissage"/>
+  <rdfs:range rdf:resource="#Etudiant"/>
+  <owl:inverseOf rdf:resource="#aIndicateur"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#aIndicateur">
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="#IndicateurApprentissage"/>
+  <owl:inverseOf rdf:resource="#concerne"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#assiste">
+  <rdfs:domain rdf:resource="#AgentPedagogiqueIA"/>
+  <rdfs:range rdf:resource="#Etudiant"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#recommande">
+  <rdfs:domain rdf:resource="#AgentPedagogiqueIA"/>
+  <rdfs:range>
+    <owl:Class>
+      <owl:unionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Cours"/>
+        <rdf:Description rdf:about="#RessourcePedagogique"/>
+        <rdf:Description rdf:about="#ParcoursApprentissage"/>
+      </owl:unionOf>
+    </owl:Class>
+  </rdfs:range>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#corrige">
+  <rdfs:domain rdf:resource="#CorrecteurAutomatique"/>
+  <rdfs:range rdf:resource="#Evaluation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#atteste">
+  <rdfs:domain rdf:resource="#PreuveDeCompetence"/>
+  <rdfs:range rdf:resource="#Competence"/>
+  <owl:inverseOf rdf:resource="#estAttesteePar"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#estAttesteePar">
+  <rdfs:domain rdf:resource="#Competence"/>
+  <rdfs:range rdf:resource="#PreuveDeCompetence"/>
+  <owl:inverseOf rdf:resource="#atteste"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#delivreA">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PreuveDeCompetence"/>
+  <rdfs:range rdf:resource="#Etudiant"/>
+  <owl:inverseOf rdf:resource="#obtientPreuve"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#obtientPreuve">
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="#PreuveDeCompetence"/>
+  <owl:inverseOf rdf:resource="#delivreA"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#requiertCompetence">
+  <rdfs:domain rdf:resource="#Metier"/>
+  <rdfs:range rdf:resource="#Competence"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#viseMetier">
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="#Metier"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="#nom">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Personne"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#email">
+  <rdfs:domain rdf:resource="#Personne"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#anneeEtude">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</xsd:maxInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <rdf:Description>
+                  <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</xsd:minInclusive>
+                </rdf:Description>
+              </rdf:first>
+              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#codeCours">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#intitule">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#nbCredits">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</xsd:maxInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <rdf:Description>
+                  <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</xsd:minInclusive>
+                </rdf:Description>
+              </rdf:first>
+              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#intitule"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#volumeHoraire">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</xsd:minInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#intitule"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#niveau">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:oneOf>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Débutant</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Intermédiaire</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Avancé</rdf:first>
+        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+      </owl:oneOf>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#codeCours"/>
+  <rdfs:subPropertyOf rdf:resource="#modalite"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#note">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Evaluation"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">20.0</xsd:maxInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <rdf:Description>
+                  <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</xsd:minInclusive>
+                </rdf:Description>
+              </rdf:first>
+              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#coefficient"/>
+  <rdfs:subPropertyOf rdf:resource="#codeEvaluation"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#session">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Evaluation"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:oneOf>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Principale</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Rattrapage</rdf:first>
+        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+      </owl:oneOf>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#matricule">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#specialite">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Enseignant"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#email"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#semestre">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Cours"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</xsd:maxInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <rdf:Description>
+                  <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</xsd:minInclusive>
+                </rdf:Description>
+              </rdf:first>
+              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#intitule"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#intituleFormation">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Formation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#modalite"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dureeAnnees">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Formation"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</xsd:maxInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <rdf:Description>
+                  <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</xsd:minInclusive>
+                </rdf:Description>
+              </rdf:first>
+              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#codeFormation"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#nbCreditsTotal">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Formation"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</xsd:minInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#libelleCompetence">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Competence"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#coefficient">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Evaluation"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:minExclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</xsd:minExclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dateEvaluation">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Evaluation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#titre">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#RessourcePedagogique"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#url">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#RessourcePedagogique"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dureeMinutes">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#RessourcePedagogique"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</xsd:minInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#auteur"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#langue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#RessourcePedagogique"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:oneOf>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FR</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EN</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">AR</rdf:first>
+        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+      </owl:oneOf>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#auteur"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#nomParcours">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ParcoursApprentissage"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dureeSemestres">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ParcoursApprentissage"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</xsd:minInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#libelleDomaine">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Domaine"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#prenom">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Personne"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#telephone"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#telephone">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Personne"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dateInscription">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#estBoursier">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Etudiant"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+  <rdfs:subPropertyOf rdf:resource="#email"/>
+  <rdfs:subPropertyOf rdf:resource="#matricule"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#bureau">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Enseignant"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#anneesExperience">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Enseignant"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</xsd:minInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#bureau"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#service">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PersonnelAdministratif"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#email"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#codeFormation">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Formation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#estAccreditee">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Formation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#modalite">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain>
+    <owl:Class>
+      <owl:unionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Formation"/>
+        <rdf:Description rdf:about="#Cours"/>
+      </owl:unionOf>
+    </owl:Class>
+  </rdfs:domain>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:oneOf>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Distanciel</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hybride</rdf:first>
+        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+      </owl:oneOf>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#codeCompetence">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Competence"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#niveauMaitriseAttendu">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Competence"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:oneOf>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Notions</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Application</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Maîtrise</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Expertise</rdf:first>
+        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+      </owl:oneOf>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#referentiel">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Competence"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#codeEvaluation">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Evaluation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#dureeEpreuve"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dureeEpreuve">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Evaluation"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</xsd:minInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#auteur">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#RessourcePedagogique"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:subPropertyOf rdf:resource="#titre"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#datePublication">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#RessourcePedagogique"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#estLibreAcces">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#RessourcePedagogique"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#codeParcours">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ParcoursApprentissage"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#objectifParcours">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ParcoursApprentissage"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#codeDomaine">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Domaine"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#motsCles">
+  <rdfs:domain rdf:resource="#Domaine"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#valeur">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#IndicateurApprentissage"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.0</xsd:maxInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <rdf:Description>
+                  <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</xsd:minInclusive>
+                </rdf:Description>
+              </rdf:first>
+              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#seuilAlerte">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#IndicateurApprentissage"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.0</xsd:maxInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <rdf:Description>
+                  <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</xsd:minInclusive>
+                </rdf:Description>
+              </rdf:first>
+              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dateMesure">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#IndicateurApprentissage"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#periodeMesure">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#IndicateurApprentissage"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:oneOf>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hebdomadaire</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mensuelle</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Semestrielle</rdf:first>
+        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+      </owl:oneOf>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#valeur"/>
+  <rdfs:subPropertyOf rdf:resource="#dateMesure"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#modeleIA">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#AgentPedagogiqueIA"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#versionModele">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#AgentPedagogiqueIA"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#tauxPrecision">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#AgentPedagogiqueIA"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.0</xsd:maxInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <rdf:Description>
+                  <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</xsd:minInclusive>
+                </rdf:Description>
+              </rdf:first>
+              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#dateDeploiement"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#estExplicable">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#AgentPedagogiqueIA"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#hashBlockchain">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PreuveDeCompetence"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dateEmission">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PreuveDeCompetence"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+  <rdfs:subPropertyOf rdf:resource="#estVerifie"/>
+  <rdfs:subPropertyOf rdf:resource="#emetteur"/>
+  <rdfs:subPropertyOf rdf:resource="#urlVerification"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dateExpiration">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PreuveDeCompetence"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+  <rdfs:subPropertyOf rdf:resource="#dateEmission"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#estVerifie">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PreuveDeCompetence"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#emetteur">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PreuveDeCompetence"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#urlVerification">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PreuveDeCompetence"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#intituleMetier">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Metier"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#codeISCO">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Metier"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#niveauEtudesRequis">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Metier"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:oneOf>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Licence</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Master</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingénieur</rdf:first>
+        <rdf:rest>
+        <rdf:Description>
+      <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Doctorat</rdf:first>
+        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+        </rdf:rest>
+        </rdf:Description>
+      </owl:oneOf>
+    </rdfs:Datatype>
+  </rdfs:range>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#estEnTension">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Metier"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#sourceDonnees">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#IndicateurApprentissage"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dateDeploiement">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#AgentPedagogiqueIA"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#fournisseur">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#AgentPedagogiqueIA"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#salaireMoyenDebutant">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Metier"/>
+  <rdfs:range>
+    <rdfs:Datatype>
+      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+      <owl:withRestrictions>
+        <rdf:Description>
+          <rdf:first>
+            <rdf:Description>
+              <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.0</xsd:minInclusive>
+            </rdf:Description>
+          </rdf:first>
+          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+      </owl:withRestrictions>
+    </rdfs:Datatype>
+  </rdfs:range>
+  <rdfs:subPropertyOf rdf:resource="#codeISCO"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#secteur">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Metier"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="#Cours">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#estEnseignePar"/>
+      <owl:someValuesFrom rdf:resource="#Enseignant"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#appartientADomaine"/>
+      <owl:someValuesFrom rdf:resource="#Domaine"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#developpeCompetence"/>
+      <owl:someValuesFrom rdf:resource="#Competence"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#faitPartieDe"/>
+      <owl:onClass rdf:resource="#Formation"/>
+      <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minQualifiedCardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Enseignant">
+  <rdfs:subClassOf rdf:resource="#Personne"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#enseigne"/>
+      <owl:onClass rdf:resource="#Cours"/>
+      <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minQualifiedCardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Formation">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#contientCours"/>
+      <owl:onClass rdf:resource="#Cours"/>
+      <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minQualifiedCardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Etudiant">
+  <rdfs:subClassOf rdf:resource="#Personne"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#inscritA"/>
+      <owl:onClass rdf:resource="#Formation"/>
+      <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#anneeEtude"/>
+      <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Personne">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Competence">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Evaluation">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ParcoursApprentissage">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#comprendCours"/>
+      <owl:onClass rdf:resource="#Cours"/>
+      <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:minQualifiedCardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#RessourcePedagogique">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Domaine">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#IndicateurApprentissage">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#concerne"/>
+      <owl:onClass rdf:resource="#Etudiant"/>
+      <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#valeur"/>
+      <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#AgentPedagogiqueIA">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#estExplicable"/>
+      <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#CorrecteurAutomatique">
+  <rdfs:subClassOf rdf:resource="#AgentPedagogiqueIA"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PreuveDeCompetence">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#atteste"/>
+      <owl:someValuesFrom rdf:resource="#Competence"/>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#delivreA"/>
+      <owl:onClass rdf:resource="#Etudiant"/>
+      <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#Metier">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#requiertCompetence"/>
+      <owl:onClass rdf:resource="#Competence"/>
+      <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minQualifiedCardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#PersonnelAdministratif">
+  <rdfs:subClassOf rdf:resource="#Personne"/>
+</owl:Class>
+
+<owl:Class rdf:about="#EnseignantPermanent">
+  <rdfs:subClassOf rdf:resource="#Enseignant"/>
+  <owl:disjointWith rdf:resource="#EnseignantVacataire"/>
+</owl:Class>
+
+<owl:Class rdf:about="#EnseignantVacataire">
+  <rdfs:subClassOf rdf:resource="#Enseignant"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Professeur">
+  <rdfs:subClassOf rdf:resource="#EnseignantPermanent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MaitreDeConferences">
+  <rdfs:subClassOf rdf:resource="#EnseignantPermanent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MaitreAssistant">
+  <rdfs:subClassOf rdf:resource="#EnseignantPermanent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Assistant">
+  <rdfs:subClassOf rdf:resource="#EnseignantPermanent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#IntervenantIndustriel">
+  <rdfs:subClassOf rdf:resource="#EnseignantVacataire"/>
+  <owl:disjointWith rdf:resource="#VacataireUniversitaire"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#enseigne"/>
+      <owl:allValuesFrom>
+        <owl:Class>
+          <owl:unionOf rdf:parseType="Collection">
+            <rdf:Description rdf:about="#CoursDeSpecialite"/>
+            <rdf:Description rdf:about="#OptionTechnique"/>
+          </owl:unionOf>
+        </owl:Class>
+      </owl:allValuesFrom>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#VacataireUniversitaire">
+  <rdfs:subClassOf rdf:resource="#EnseignantVacataire"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CoursDeSpecialite">
+  <rdfs:subClassOf rdf:resource="#CoursObligatoire"/>
+</owl:Class>
+
+<owl:Class rdf:about="#OptionTechnique">
+  <rdfs:subClassOf rdf:resource="#CoursOptionnel"/>
+  <owl:disjointWith rdf:resource="#OptionLibre"/>
+</owl:Class>
+
+<owl:Class rdf:about="#AgentScolarite">
+  <rdfs:subClassOf rdf:resource="#PersonnelAdministratif"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Bibliothecaire">
+  <rdfs:subClassOf rdf:resource="#PersonnelAdministratif"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ChargeRelationsEntreprises">
+  <rdfs:subClassOf rdf:resource="#PersonnelAdministratif"/>
+</owl:Class>
+
+<owl:Class rdf:about="#FormationInitiale">
+  <rdfs:subClassOf rdf:resource="#Formation"/>
+  <owl:disjointWith rdf:resource="#FormationContinue"/>
+</owl:Class>
+
+<owl:Class rdf:about="#FormationContinue">
+  <rdfs:subClassOf rdf:resource="#Formation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Licence">
+  <rdfs:subClassOf rdf:resource="#FormationInitiale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#LicenceFondamentale">
+  <rdfs:subClassOf rdf:resource="#Licence"/>
+  <owl:disjointWith rdf:resource="#LicenceAppliquee"/>
+</owl:Class>
+
+<owl:Class rdf:about="#LicenceAppliquee">
+  <rdfs:subClassOf rdf:resource="#Licence"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Master">
+  <rdfs:subClassOf rdf:resource="#FormationInitiale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MasterRecherche">
+  <rdfs:subClassOf rdf:resource="#Master"/>
+  <owl:disjointWith rdf:resource="#MasterProfessionnel"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MasterProfessionnel">
+  <rdfs:subClassOf rdf:resource="#Master"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CycleIngenieur">
+  <rdfs:subClassOf rdf:resource="#FormationInitiale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#IngenieurInformatique">
+  <rdfs:subClassOf rdf:resource="#CycleIngenieur"/>
+</owl:Class>
+
+<owl:Class rdf:about="#IngenieurTelecom">
+  <rdfs:subClassOf rdf:resource="#CycleIngenieur"/>
+</owl:Class>
+
+<owl:Class rdf:about="#IngenieurGenieCivil">
+  <rdfs:subClassOf rdf:resource="#CycleIngenieur"/>
+</owl:Class>
+
+<owl:Class rdf:about="#IngenieurElectromecanique">
+  <rdfs:subClassOf rdf:resource="#CycleIngenieur"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Doctorat">
+  <rdfs:subClassOf rdf:resource="#FormationInitiale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Certification">
+  <rdfs:subClassOf rdf:resource="#FormationContinue"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CertificationProfessionnelle">
+  <rdfs:subClassOf rdf:resource="#Certification"/>
+  <owl:disjointWith rdf:resource="#CertificationLinguistique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CertificationLinguistique">
+  <rdfs:subClassOf rdf:resource="#Certification"/>
+</owl:Class>
+
+<owl:Class rdf:about="#FormationEnLigne">
+  <rdfs:subClassOf rdf:resource="#FormationContinue"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MOOC">
+  <rdfs:subClassOf rdf:resource="#FormationEnLigne"/>
+  <owl:disjointWith rdf:resource="#SPOC"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SPOC">
+  <rdfs:subClassOf rdf:resource="#FormationEnLigne"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Bootcamp">
+  <rdfs:subClassOf rdf:resource="#FormationContinue"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CoursObligatoire">
+  <rdfs:subClassOf rdf:resource="#Cours"/>
+  <owl:disjointWith rdf:resource="#CoursOptionnel"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CoursOptionnel">
+  <rdfs:subClassOf rdf:resource="#Cours"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CoursFondamental">
+  <rdfs:subClassOf rdf:resource="#CoursObligatoire"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CoursTransversal">
+  <rdfs:subClassOf rdf:resource="#CoursObligatoire"/>
+</owl:Class>
+
+<owl:Class rdf:about="#OptionLibre">
+  <rdfs:subClassOf rdf:resource="#CoursOptionnel"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceTechnique">
+  <rdfs:subClassOf rdf:resource="#Competence"/>
+  <owl:disjointWith rdf:resource="#CompetenceTransversale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceTransversale">
+  <rdfs:subClassOf rdf:resource="#Competence"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceProgrammation">
+  <rdfs:subClassOf rdf:resource="#CompetenceTechnique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceFrontend">
+  <rdfs:subClassOf rdf:resource="#CompetenceProgrammation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceBackend">
+  <rdfs:subClassOf rdf:resource="#CompetenceProgrammation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceMobile">
+  <rdfs:subClassOf rdf:resource="#CompetenceProgrammation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceDonnees">
+  <rdfs:subClassOf rdf:resource="#CompetenceTechnique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceBaseDeDonnees">
+  <rdfs:subClassOf rdf:resource="#CompetenceDonnees"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceIA">
+  <rdfs:subClassOf rdf:resource="#CompetenceDonnees"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceWebSemantique">
+  <rdfs:subClassOf rdf:resource="#CompetenceDonnees"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceInfrastructure">
+  <rdfs:subClassOf rdf:resource="#CompetenceTechnique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceCloud">
+  <rdfs:subClassOf rdf:resource="#CompetenceInfrastructure"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceDevOps">
+  <rdfs:subClassOf rdf:resource="#CompetenceInfrastructure"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceSecurite">
+  <rdfs:subClassOf rdf:resource="#CompetenceInfrastructure"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceScientifique">
+  <rdfs:subClassOf rdf:resource="#CompetenceTechnique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceAlgorithmique">
+  <rdfs:subClassOf rdf:resource="#CompetenceScientifique"/>
+  <owl:disjointWith rdf:resource="#CompetenceMathematique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceMathematique">
+  <rdfs:subClassOf rdf:resource="#CompetenceScientifique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceCommunication">
+  <rdfs:subClassOf rdf:resource="#CompetenceTransversale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceLinguistique">
+  <rdfs:subClassOf rdf:resource="#CompetenceTransversale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceGestionProjet">
+  <rdfs:subClassOf rdf:resource="#CompetenceTransversale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceTravailEquipe">
+  <rdfs:subClassOf rdf:resource="#CompetenceTransversale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#EvaluationContinue">
+  <rdfs:subClassOf rdf:resource="#Evaluation"/>
+  <owl:disjointWith rdf:resource="#EvaluationFinale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#EvaluationFinale">
+  <rdfs:subClassOf rdf:resource="#Evaluation"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#note"/>
+      <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#QCM">
+  <rdfs:subClassOf rdf:resource="#EvaluationContinue"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DevoirSurveille">
+  <rdfs:subClassOf rdf:resource="#EvaluationContinue"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MiniProjet">
+  <rdfs:subClassOf rdf:resource="#EvaluationContinue"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ExposeOral">
+  <rdfs:subClassOf rdf:resource="#EvaluationContinue"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ExamenEcrit">
+  <rdfs:subClassOf rdf:resource="#EvaluationFinale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ExamenPratique">
+  <rdfs:subClassOf rdf:resource="#EvaluationFinale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ProjetFinal">
+  <rdfs:subClassOf rdf:resource="#EvaluationFinale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ProjetIntegre">
+  <rdfs:subClassOf rdf:resource="#ProjetFinal"/>
+  <owl:disjointWith rdf:resource="#ProjetDeFinEtudes"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ProjetDeFinEtudes">
+  <rdfs:subClassOf rdf:resource="#ProjetFinal"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Soutenance">
+  <rdfs:subClassOf rdf:resource="#EvaluationFinale"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SoutenanceStage">
+  <rdfs:subClassOf rdf:resource="#Soutenance"/>
+  <owl:disjointWith rdf:resource="#SoutenancePFE"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SoutenancePFE">
+  <rdfs:subClassOf rdf:resource="#Soutenance"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RessourceNumerique">
+  <rdfs:subClassOf rdf:resource="#RessourcePedagogique"/>
+  <owl:disjointWith rdf:resource="#RessourcePhysique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RessourcePhysique">
+  <rdfs:subClassOf rdf:resource="#RessourcePedagogique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Video">
+  <rdfs:subClassOf rdf:resource="#RessourceNumerique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#VideoCours">
+  <rdfs:subClassOf rdf:resource="#Video"/>
+  <owl:disjointWith rdf:resource="#Tutoriel"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Tutoriel">
+  <rdfs:subClassOf rdf:resource="#Video"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DocumentNumerique">
+  <rdfs:subClassOf rdf:resource="#RessourceNumerique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SupportDeCours">
+  <rdfs:subClassOf rdf:resource="#DocumentNumerique"/>
+  <owl:disjointWith rdf:resource="#ArticleScientifique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ArticleScientifique">
+  <rdfs:subClassOf rdf:resource="#DocumentNumerique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Diaporama">
+  <rdfs:subClassOf rdf:resource="#SupportDeCours"/>
+  <owl:disjointWith rdf:resource="#NoteDeCours"/>
+</owl:Class>
+
+<owl:Class rdf:about="#NoteDeCours">
+  <rdfs:subClassOf rdf:resource="#SupportDeCours"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ArticleJournal">
+  <rdfs:subClassOf rdf:resource="#ArticleScientifique"/>
+  <owl:disjointWith rdf:resource="#ArticleConference"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ArticleConference">
+  <rdfs:subClassOf rdf:resource="#ArticleScientifique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Exercice">
+  <rdfs:subClassOf rdf:resource="#RessourceNumerique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ExerciceCorrige">
+  <rdfs:subClassOf rdf:resource="#Exercice"/>
+  <owl:disjointWith rdf:resource="#ExerciceInteractif"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ExerciceInteractif">
+  <rdfs:subClassOf rdf:resource="#Exercice"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Logiciel">
+  <rdfs:subClassOf rdf:resource="#RessourceNumerique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#OutilDeveloppement">
+  <rdfs:subClassOf rdf:resource="#Logiciel"/>
+  <owl:disjointWith rdf:resource="#PlateformeEnLigne"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PlateformeEnLigne">
+  <rdfs:subClassOf rdf:resource="#Logiciel"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Livre">
+  <rdfs:subClassOf rdf:resource="#RessourcePhysique"/>
+  <owl:disjointWith rdf:resource="#Polycopie"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Polycopie">
+  <rdfs:subClassOf rdf:resource="#RessourcePhysique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Manuel">
+  <rdfs:subClassOf rdf:resource="#Livre"/>
+  <owl:disjointWith rdf:resource="#OuvrageReference"/>
+</owl:Class>
+
+<owl:Class rdf:about="#OuvrageReference">
+  <rdfs:subClassOf rdf:resource="#Livre"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ParcoursAcademique">
+  <rdfs:subClassOf rdf:resource="#ParcoursApprentissage"/>
+  <owl:disjointWith rdf:resource="#ParcoursPersonnalise"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ParcoursPersonnalise">
+  <rdfs:subClassOf rdf:resource="#ParcoursApprentissage"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ParcoursTronCommun">
+  <rdfs:subClassOf rdf:resource="#ParcoursAcademique"/>
+  <owl:disjointWith rdf:resource="#ParcoursSpecialisation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ParcoursSpecialisation">
+  <rdfs:subClassOf rdf:resource="#ParcoursAcademique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ParcoursRattrapage">
+  <rdfs:subClassOf rdf:resource="#ParcoursPersonnalise"/>
+  <owl:disjointWith rdf:resource="#ParcoursExcellence"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ParcoursExcellence">
+  <rdfs:subClassOf rdf:resource="#ParcoursPersonnalise"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DomaineInformatique">
+  <rdfs:subClassOf rdf:resource="#Domaine"/>
+</owl:Class>
+
+<owl:Class rdf:about="#GenieLogiciel">
+  <rdfs:subClassOf rdf:resource="#DomaineInformatique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ScienceDesDonnees">
+  <rdfs:subClassOf rdf:resource="#DomaineInformatique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ReseauxEtTelecom">
+  <rdfs:subClassOf rdf:resource="#DomaineInformatique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CyberSecurite">
+  <rdfs:subClassOf rdf:resource="#DomaineInformatique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DomaineMathematiques">
+  <rdfs:subClassOf rdf:resource="#Domaine"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MathematiquesAppliquees">
+  <rdfs:subClassOf rdf:resource="#DomaineMathematiques"/>
+  <owl:disjointWith rdf:resource="#Statistiques"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Statistiques">
+  <rdfs:subClassOf rdf:resource="#DomaineMathematiques"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DomaineSciencesHumaines">
+  <rdfs:subClassOf rdf:resource="#Domaine"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Langues">
+  <rdfs:subClassOf rdf:resource="#DomaineSciencesHumaines"/>
+  <owl:disjointWith rdf:resource="#Management"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Management">
+  <rdfs:subClassOf rdf:resource="#DomaineSciencesHumaines"/>
+</owl:Class>
+
+<owl:Class rdf:about="#IndicateurEngagement">
+  <rdfs:subClassOf rdf:resource="#IndicateurApprentissage"/>
+</owl:Class>
+
+<owl:Class rdf:about="#TauxAssiduite">
+  <rdfs:subClassOf rdf:resource="#IndicateurEngagement"/>
+</owl:Class>
+
+<owl:Class rdf:about="#TempsConnexion">
+  <rdfs:subClassOf rdf:resource="#IndicateurEngagement"/>
+</owl:Class>
+
+<owl:Class rdf:about="#TauxParticipation">
+  <rdfs:subClassOf rdf:resource="#IndicateurEngagement"/>
+</owl:Class>
+
+<owl:Class rdf:about="#IndicateurPerformance">
+  <rdfs:subClassOf rdf:resource="#IndicateurApprentissage"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MoyenneGenerale">
+  <rdfs:subClassOf rdf:resource="#IndicateurPerformance"/>
+  <owl:disjointWith rdf:resource="#TauxReussite"/>
+</owl:Class>
+
+<owl:Class rdf:about="#TauxReussite">
+  <rdfs:subClassOf rdf:resource="#IndicateurPerformance"/>
+</owl:Class>
+
+<owl:Class rdf:about="#IndicateurBienEtre">
+  <rdfs:subClassOf rdf:resource="#IndicateurApprentissage"/>
+</owl:Class>
+
+<owl:Class rdf:about="#NiveauStress">
+  <rdfs:subClassOf rdf:resource="#IndicateurBienEtre"/>
+  <owl:disjointWith rdf:resource="#ChargeDeTravail"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ChargeDeTravail">
+  <rdfs:subClassOf rdf:resource="#IndicateurBienEtre"/>
+</owl:Class>
+
+<owl:Class rdf:about="#TuteurIntelligent">
+  <rdfs:subClassOf rdf:resource="#AgentPedagogiqueIA"/>
+</owl:Class>
+
+<owl:Class rdf:about="#TuteurConversationnel">
+  <rdfs:subClassOf rdf:resource="#TuteurIntelligent"/>
+  <owl:disjointWith rdf:resource="#TuteurAdaptatif"/>
+</owl:Class>
+
+<owl:Class rdf:about="#TuteurAdaptatif">
+  <rdfs:subClassOf rdf:resource="#TuteurIntelligent"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SystemeRecommandation">
+  <rdfs:subClassOf rdf:resource="#AgentPedagogiqueIA"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RecommandationCours">
+  <rdfs:subClassOf rdf:resource="#SystemeRecommandation"/>
+  <owl:disjointWith rdf:resource="#RecommandationRessource"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RecommandationRessource">
+  <rdfs:subClassOf rdf:resource="#SystemeRecommandation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CorrecteurCode">
+  <rdfs:subClassOf rdf:resource="#CorrecteurAutomatique"/>
+  <owl:disjointWith rdf:resource="#CorrecteurRedaction"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CorrecteurRedaction">
+  <rdfs:subClassOf rdf:resource="#CorrecteurAutomatique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DetecteurPlagiat">
+  <rdfs:subClassOf rdf:resource="#AgentPedagogiqueIA"/>
+</owl:Class>
+
+<owl:Class rdf:about="#BadgeNumerique">
+  <rdfs:subClassOf rdf:resource="#PreuveDeCompetence"/>
+</owl:Class>
+
+<owl:Class rdf:about="#BadgeCompetence">
+  <rdfs:subClassOf rdf:resource="#BadgeNumerique"/>
+  <owl:disjointWith rdf:resource="#BadgeParticipation"/>
+</owl:Class>
+
+<owl:Class rdf:about="#BadgeParticipation">
+  <rdfs:subClassOf rdf:resource="#BadgeNumerique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MicroCertification">
+  <rdfs:subClassOf rdf:resource="#PreuveDeCompetence"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DiplomeNumerique">
+  <rdfs:subClassOf rdf:resource="#PreuveDeCompetence"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DiplomeBlockchain">
+  <rdfs:subClassOf rdf:resource="#DiplomeNumerique"/>
+  <owl:disjointWith rdf:resource="#DiplomeSigne"/>
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#hashBlockchain"/>
+      <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
+<owl:Class rdf:about="#DiplomeSigne">
+  <rdfs:subClassOf rdf:resource="#DiplomeNumerique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MetierTechnique">
+  <rdfs:subClassOf rdf:resource="#Metier"/>
+  <owl:disjointWith rdf:resource="#MetierGestion"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MetierGestion">
+  <rdfs:subClassOf rdf:resource="#Metier"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MetierDeveloppement">
+  <rdfs:subClassOf rdf:resource="#MetierTechnique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MetierData">
+  <rdfs:subClassOf rdf:resource="#MetierTechnique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MetierInfrastructure">
+  <rdfs:subClassOf rdf:resource="#MetierTechnique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MetierCybersecurite">
+  <rdfs:subClassOf rdf:resource="#MetierTechnique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MetierConseil">
+  <rdfs:subClassOf rdf:resource="#MetierGestion"/>
+  <owl:disjointWith rdf:resource="#MetierGestionProjet"/>
+</owl:Class>
+
+<owl:Class rdf:about="#MetierGestionProjet">
+  <rdfs:subClassOf rdf:resource="#MetierGestion"/>
+</owl:Class>
+
+<owl:Class rdf:about="#EtudiantLicence">
+  <rdfs:subClassOf rdf:resource="#Etudiant"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Etudiant"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#inscritA"/>
+          <owl:someValuesFrom rdf:resource="#Licence"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#EtudiantMaster">
+  <rdfs:subClassOf rdf:resource="#Etudiant"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Etudiant"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#inscritA"/>
+          <owl:someValuesFrom rdf:resource="#Master"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#EtudiantIngenieur">
+  <rdfs:subClassOf rdf:resource="#Etudiant"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Etudiant"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#inscritA"/>
+          <owl:someValuesFrom rdf:resource="#CycleIngenieur"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#Doctorant">
+  <rdfs:subClassOf rdf:resource="#Etudiant"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Etudiant"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#inscritA"/>
+          <owl:someValuesFrom rdf:resource="#Doctorat"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#EtudiantTronCommun">
+  <rdfs:subClassOf rdf:resource="#EtudiantIngenieur"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#EtudiantIngenieur"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#anneeEtude"/>
+          <owl:someValuesFrom>
+            <rdfs:Datatype>
+              <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+              <owl:withRestrictions>
+                <rdf:Description>
+                  <rdf:first>
+                    <rdf:Description>
+                      <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</xsd:maxInclusive>
+                    </rdf:Description>
+                  </rdf:first>
+                  <rdf:rest>
+                    <rdf:Description>
+                      <rdf:first>
+                        <rdf:Description>
+                          <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</xsd:minInclusive>
+                        </rdf:Description>
+                      </rdf:first>
+                      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                    </rdf:Description>
+                  </rdf:rest>
+                </rdf:Description>
+              </owl:withRestrictions>
+            </rdfs:Datatype>
+          </owl:someValuesFrom>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#EtudiantOption">
+  <rdfs:subClassOf rdf:resource="#EtudiantIngenieur"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#EtudiantIngenieur"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#anneeEtude"/>
+          <owl:someValuesFrom>
+            <rdfs:Datatype>
+              <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+              <owl:withRestrictions>
+                <rdf:Description>
+                  <rdf:first>
+                    <rdf:Description>
+                      <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</xsd:maxInclusive>
+                    </rdf:Description>
+                  </rdf:first>
+                  <rdf:rest>
+                    <rdf:Description>
+                      <rdf:first>
+                        <rdf:Description>
+                          <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</xsd:minInclusive>
+                        </rdf:Description>
+                      </rdf:first>
+                      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                    </rdf:Description>
+                  </rdf:rest>
+                </rdf:Description>
+              </owl:withRestrictions>
+            </rdfs:Datatype>
+          </owl:someValuesFrom>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#EtudiantActif">
+  <rdfs:subClassOf rdf:resource="#Etudiant"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Etudiant"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#aValide"/>
+          <owl:someValuesFrom rdf:resource="#Cours"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#ResponsableFormation">
+  <rdfs:subClassOf rdf:resource="#Personne"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Personne"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#estResponsableDe"/>
+          <owl:someValuesFrom rdf:resource="#Formation"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#Encadrant">
+  <rdfs:subClassOf rdf:resource="#Enseignant"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Enseignant"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#encadre"/>
+          <owl:someValuesFrom rdf:resource="#Etudiant"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#CoursAvance">
+  <rdfs:subClassOf rdf:resource="#Cours"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Cours"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#aPourPrerequis"/>
+          <owl:someValuesFrom rdf:resource="#Cours"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#CoursWeb">
+  <rdfs:subClassOf rdf:resource="#Cours"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Cours"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#appartientADomaine"/>
+          <owl:hasValue rdf:resource="#DeveloppementWeb"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf rdf:resource="#CoursInformatique"/>
+</owl:Class>
+
+<owl:Class rdf:about="#CoursInformatique">
+  <rdfs:subClassOf rdf:resource="#Cours"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Cours"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#appartientADomaine"/>
+          <owl:someValuesFrom rdf:resource="#DomaineInformatique"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#EvaluationReussie">
+  <rdfs:subClassOf rdf:resource="#Evaluation"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Evaluation"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#note"/>
+          <owl:someValuesFrom>
+            <rdfs:Datatype>
+              <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+              <owl:withRestrictions>
+                <rdf:Description>
+                  <rdf:first>
+                    <rdf:Description>
+                      <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">10.0</xsd:minInclusive>
+                    </rdf:Description>
+                  </rdf:first>
+                  <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                </rdf:Description>
+              </owl:withRestrictions>
+            </rdfs:Datatype>
+          </owl:someValuesFrom>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#EtudiantARisque">
+  <rdfs:subClassOf rdf:resource="#Etudiant"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Etudiant"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#aIndicateur"/>
+          <owl:someValuesFrom>
+            <owl:Class>
+              <owl:intersectionOf rdf:parseType="Collection">
+                <rdf:Description rdf:about="#TauxAssiduite"/>
+                <owl:Restriction>
+                  <owl:onProperty rdf:resource="#valeur"/>
+                  <owl:someValuesFrom>
+                    <rdfs:Datatype>
+                      <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+                      <owl:withRestrictions>
+                        <rdf:Description>
+                          <rdf:first>
+                            <rdf:Description>
+                              <xsd:maxExclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.6</xsd:maxExclusive>
+                            </rdf:Description>
+                          </rdf:first>
+                          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                        </rdf:Description>
+                      </owl:withRestrictions>
+                    </rdfs:Datatype>
+                  </owl:someValuesFrom>
+                </owl:Restriction>
+              </owl:intersectionOf>
+            </owl:Class>
+          </owl:someValuesFrom>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#AgentIAFiable">
+  <rdfs:subClassOf rdf:resource="#AgentPedagogiqueIA"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#AgentPedagogiqueIA"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#tauxPrecision"/>
+          <owl:someValuesFrom>
+            <rdfs:Datatype>
+              <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+              <owl:withRestrictions>
+                <rdf:Description>
+                  <rdf:first>
+                    <rdf:Description>
+                      <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.9</xsd:minInclusive>
+                    </rdf:Description>
+                  </rdf:first>
+                  <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                </rdf:Description>
+              </owl:withRestrictions>
+            </rdfs:Datatype>
+          </owl:someValuesFrom>
+        </owl:Restriction>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#estExplicable"/>
+          <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:hasValue>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#CompetenceCertifiee">
+  <rdfs:subClassOf rdf:resource="#Competence"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Competence"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#estAttesteePar"/>
+          <owl:someValuesFrom>
+            <owl:Class>
+              <owl:intersectionOf rdf:parseType="Collection">
+                <rdf:Description rdf:about="#PreuveDeCompetence"/>
+                <owl:Restriction>
+                  <owl:onProperty rdf:resource="#estVerifie"/>
+                  <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:hasValue>
+                </owl:Restriction>
+              </owl:intersectionOf>
+            </owl:Class>
+          </owl:someValuesFrom>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:NamedIndividual rdf:about="#DeveloppementWeb">
+  <rdf:type rdf:resource="#GenieLogiciel"/>
+  <libelleDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Développement web</libelleDomaine>
+  <codeDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INF-GL-WEB</codeDomaine>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">back-end</motsCles>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">web</motsCles>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">front-end</motsCles>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#ProgrammationFondamentale">
+  <rdf:type rdf:resource="#GenieLogiciel"/>
+  <libelleDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Programmation fondamentale</libelleDomaine>
+  <codeDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INF-GL-PROG</codeDomaine>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">algorithmique</motsCles>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">programmation</motsCles>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#BasesDeDonnees">
+  <rdf:type rdf:resource="#ScienceDesDonnees"/>
+  <libelleDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bases de données</libelleDomaine>
+  <codeDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INF-SD-BDD</codeDomaine>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">modélisation</motsCles>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SQL</motsCles>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#IngenierieDesConnaissances">
+  <rdf:type rdf:resource="#ScienceDesDonnees"/>
+  <libelleDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingénierie des connaissances</libelleDomaine>
+  <codeDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INF-SD-IC</codeDomaine>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">web sémantique</motsCles>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ontologie</motsCles>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#IntelligenceArtificielle">
+  <rdf:type rdf:resource="#ScienceDesDonnees"/>
+  <libelleDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Intelligence artificielle</libelleDomaine>
+  <codeDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INF-SD-IA</codeDomaine>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">apprentissage automatique</motsCles>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">IA</motsCles>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#ReseauxInformatiques">
+  <rdf:type rdf:resource="#ReseauxEtTelecom"/>
+  <libelleDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Réseaux informatiques</libelleDomaine>
+  <codeDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INF-RT-RES</codeDomaine>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">protocoles</motsCles>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">réseaux</motsCles>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#StatistiqueDescriptive">
+  <rdf:type rdf:resource="#Statistiques"/>
+  <libelleDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Statistique descriptive</libelleDomaine>
+  <codeDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MATH-STAT</codeDomaine>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">statistique</motsCles>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">analyse</motsCles>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#AnglaisProfessionnel">
+  <rdf:type rdf:resource="#Langues"/>
+  <libelleDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Anglais professionnel</libelleDomaine>
+  <codeDomaine rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SH-LANG-EN</codeDomaine>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">communication</motsCles>
+  <motsCles rdf:datatype="http://www.w3.org/2001/XMLSchema#string">anglais</motsCles>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ingenieur_TWIN">
+  <rdf:type rdf:resource="#IngenieurInformatique"/>
+  <contientCours rdf:resource="#TypeScript"/>
+  <contientCours rdf:resource="#Angular"/>
+  <contientCours rdf:resource="#SQL"/>
+  <contientCours rdf:resource="#WebSemantique"/>
+  <contientCours rdf:resource="#Anglais"/>
+  <proposeParcours rdf:resource="#Parcours_FullStack"/>
+  <intituleFormation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Technologies du Web et de l'Internet</intituleFormation>
+  <dureeAnnees rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</dureeAnnees>
+  <nbCreditsTotal rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">120</nbCreditsTotal>
+  <codeFormation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ING-TWIN</codeFormation>
+  <estAccreditee rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estAccreditee>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#TypeScript">
+  <rdf:type rdf:resource="#CoursDeSpecialite"/>
+  <appartientADomaine rdf:resource="#DeveloppementWeb"/>
+  <aPourPrerequis rdf:resource="#JavaScript"/>
+  <developpeCompetence rdf:resource="#DeveloppementFrontend"/>
+  <rdf:type rdf:resource="#CoursAvance"/>
+  <rdf:type rdf:resource="#CoursWeb"/>
+  <aPourPrerequis rdf:resource="#Algorithmique"/>
+  <codeCours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">WEB201</codeCours>
+  <intitule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Programmation TypeScript</intitule>
+  <nbCredits rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</nbCredits>
+  <volumeHoraire rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">28</volumeHoraire>
+  <niveau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Intermédiaire</niveau>
+  <semestre rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</semestre>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Angular">
+  <rdf:type rdf:resource="#OptionTechnique"/>
+  <appartientADomaine rdf:resource="#DeveloppementWeb"/>
+  <aPourPrerequis rdf:resource="#TypeScript"/>
+  <developpeCompetence rdf:resource="#DeveloppementFrontend"/>
+  <developpeCompetence rdf:resource="#TravailEnEquipe"/>
+  <necessiteCompetence rdf:resource="#LogiqueAlgorithmique"/>
+  <estEvaluePar rdf:resource="#Examen_Angular"/>
+  <utiliseRessource rdf:resource="#Video_IntroAngular"/>
+  <rdf:type rdf:resource="#CoursAvance"/>
+  <rdf:type rdf:resource="#CoursWeb"/>
+  <aPourPrerequis rdf:resource="#JavaScript"/>
+  <aPourPrerequis rdf:resource="#Algorithmique"/>
+  <codeCours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">WEB301</codeCours>
+  <intitule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Framework Angular</intitule>
+  <nbCredits rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</nbCredits>
+  <volumeHoraire rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">42</volumeHoraire>
+  <niveau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Avancé</niveau>
+  <semestre rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</semestre>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#SQL">
+  <rdf:type rdf:resource="#CoursDeSpecialite"/>
+  <appartientADomaine rdf:resource="#BasesDeDonnees"/>
+  <aPourPrerequis rdf:resource="#BaseDeDonnees"/>
+  <developpeCompetence rdf:resource="#GestionDonnees"/>
+  <estEvaluePar rdf:resource="#Examen_SQL_Rattrapage"/>
+  <utiliseRessource rdf:resource="#TD_SQL"/>
+  <rdf:type rdf:resource="#CoursAvance"/>
+  <rdf:type rdf:resource="#CoursInformatique"/>
+  <codeCours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DAT201</codeCours>
+  <intitule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Langage SQL</intitule>
+  <nbCredits rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</nbCredits>
+  <volumeHoraire rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">28</volumeHoraire>
+  <niveau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Intermédiaire</niveau>
+  <semestre rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</semestre>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#WebSemantique">
+  <rdf:type rdf:resource="#CoursDeSpecialite"/>
+  <appartientADomaine rdf:resource="#IngenierieDesConnaissances"/>
+  <aPourPrerequis rdf:resource="#SQL"/>
+  <estComplementaireDe rdf:resource="#BaseDeDonnees"/>
+  <developpeCompetence rdf:resource="#ModelisationOntologie"/>
+  <necessiteCompetence rdf:resource="#GestionDonnees"/>
+  <estEvaluePar rdf:resource="#Projet_WebSemantique"/>
+  <utiliseRessource rdf:resource="#Support_WebSemantique"/>
+  <utiliseRessource rdf:resource="#Protege"/>
+  <rdf:type rdf:resource="#CoursAvance"/>
+  <rdf:type rdf:resource="#CoursInformatique"/>
+  <aPourPrerequis rdf:resource="#BaseDeDonnees"/>
+  <codeCours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DAT301</codeCours>
+  <intitule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Web sémantique et ontologies</intitule>
+  <nbCredits rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</nbCredits>
+  <volumeHoraire rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">42</volumeHoraire>
+  <niveau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Avancé</niveau>
+  <semestre rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</semestre>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Anglais">
+  <rdf:type rdf:resource="#CoursTransversal"/>
+  <appartientADomaine rdf:resource="#AnglaisProfessionnel"/>
+  <developpeCompetence rdf:resource="#AnglaisTechnique"/>
+  <codeCours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">LAN101</codeCours>
+  <intitule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Anglais professionnel</intitule>
+  <nbCredits rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</nbCredits>
+  <volumeHoraire rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">21</volumeHoraire>
+  <niveau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Intermédiaire</niveau>
+  <semestre rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</semestre>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hybride</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Parcours_FullStack">
+  <rdf:type rdf:resource="#ParcoursSpecialisation"/>
+  <comprendCours rdf:resource="#SQL"/>
+  <comprendCours rdf:resource="#JavaScript"/>
+  <comprendCours rdf:resource="#TypeScript"/>
+  <comprendCours rdf:resource="#Angular"/>
+  <nomParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Parcours Full-Stack</nomParcours>
+  <dureeSemestres rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</dureeSemestres>
+  <codeParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">P-FS</codeParcours>
+  <objectifParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Devenir développeur full-stack</objectifParcours>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ingenieur_DataScience">
+  <rdf:type rdf:resource="#IngenieurInformatique"/>
+  <contientCours rdf:resource="#SQL"/>
+  <contientCours rdf:resource="#WebSemantique"/>
+  <contientCours rdf:resource="#Anglais"/>
+  <proposeParcours rdf:resource="#Parcours_Donnees"/>
+  <intituleFormation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Data Science</intituleFormation>
+  <dureeAnnees rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</dureeAnnees>
+  <nbCreditsTotal rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">120</nbCreditsTotal>
+  <codeFormation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ING-DS</codeFormation>
+  <estAccreditee rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estAccreditee>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hybride</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Parcours_Donnees">
+  <rdf:type rdf:resource="#ParcoursSpecialisation"/>
+  <comprendCours rdf:resource="#SQL"/>
+  <comprendCours rdf:resource="#BaseDeDonnees"/>
+  <comprendCours rdf:resource="#WebSemantique"/>
+  <nomParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Parcours Données</nomParcours>
+  <dureeSemestres rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</dureeSemestres>
+  <codeParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">P-DATA</codeParcours>
+  <objectifParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Maîtriser la chaîne de traitement des données</objectifParcours>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ingenieur_TroncCommun">
+  <rdf:type rdf:resource="#IngenieurInformatique"/>
+  <contientCours rdf:resource="#Algorithmique"/>
+  <contientCours rdf:resource="#JavaScript"/>
+  <contientCours rdf:resource="#BaseDeDonnees"/>
+  <contientCours rdf:resource="#Anglais"/>
+  <intituleFormation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tronc commun informatique</intituleFormation>
+  <dureeAnnees rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</dureeAnnees>
+  <nbCreditsTotal rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">180</nbCreditsTotal>
+  <codeFormation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ING-TC</codeFormation>
+  <estAccreditee rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estAccreditee>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Algorithmique">
+  <rdf:type rdf:resource="#CoursFondamental"/>
+  <appartientADomaine rdf:resource="#ProgrammationFondamentale"/>
+  <developpeCompetence rdf:resource="#LogiqueAlgorithmique"/>
+  <rdf:type rdf:resource="#CoursInformatique"/>
+  <estPrerequisDe rdf:resource="#TypeScript"/>
+  <estPrerequisDe rdf:resource="#Angular"/>
+  <codeCours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">INF101</codeCours>
+  <intitule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Algorithmique et structures de données</intitule>
+  <nbCredits rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</nbCredits>
+  <volumeHoraire rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">42</volumeHoraire>
+  <niveau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Débutant</niveau>
+  <semestre rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</semestre>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#JavaScript">
+  <rdf:type rdf:resource="#CoursDeSpecialite"/>
+  <appartientADomaine rdf:resource="#DeveloppementWeb"/>
+  <aPourPrerequis rdf:resource="#Algorithmique"/>
+  <developpeCompetence rdf:resource="#DeveloppementFrontend"/>
+  <estEvaluePar rdf:resource="#QCM_JavaScript"/>
+  <rdf:type rdf:resource="#CoursAvance"/>
+  <rdf:type rdf:resource="#CoursWeb"/>
+  <estPrerequisDe rdf:resource="#Angular"/>
+  <codeCours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">WEB101</codeCours>
+  <intitule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Programmation JavaScript</intitule>
+  <nbCredits rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</nbCredits>
+  <volumeHoraire rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">42</volumeHoraire>
+  <niveau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Débutant</niveau>
+  <semestre rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</semestre>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#BaseDeDonnees">
+  <rdf:type rdf:resource="#CoursFondamental"/>
+  <appartientADomaine rdf:resource="#BasesDeDonnees"/>
+  <developpeCompetence rdf:resource="#GestionDonnees"/>
+  <rdf:type rdf:resource="#CoursInformatique"/>
+  <estPrerequisDe rdf:resource="#WebSemantique"/>
+  <codeCours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DAT101</codeCours>
+  <intitule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Conception de bases de données</intitule>
+  <nbCredits rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</nbCredits>
+  <volumeHoraire rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">42</volumeHoraire>
+  <niveau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Débutant</niveau>
+  <semestre rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</semestre>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Licence_GenieLogiciel">
+  <rdf:type rdf:resource="#LicenceAppliquee"/>
+  <contientCours rdf:resource="#Algorithmique"/>
+  <contientCours rdf:resource="#JavaScript"/>
+  <contientCours rdf:resource="#BaseDeDonnees"/>
+  <contientCours rdf:resource="#Anglais"/>
+  <intituleFormation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Licence en génie logiciel</intituleFormation>
+  <dureeAnnees rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</dureeAnnees>
+  <nbCreditsTotal rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">180</nbCreditsTotal>
+  <codeFormation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">LIC-GL</codeFormation>
+  <estAccreditee rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estAccreditee>
+  <modalite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Présentiel</modalite>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#DeveloppementFrontend">
+  <rdf:type rdf:resource="#CompetenceFrontend"/>
+  <rdf:type rdf:resource="#CompetenceCertifiee"/>
+  <libelleCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Développer des interfaces web</libelleCompetence>
+  <codeCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">C-FRONT</codeCompetence>
+  <niveauMaitriseAttendu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Maîtrise</niveauMaitriseAttendu>
+  <referentiel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ESCO</referentiel>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#ModelisationOntologie">
+  <rdf:type rdf:resource="#CompetenceWebSemantique"/>
+  <libelleCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Modéliser une ontologie OWL</libelleCompetence>
+  <codeCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">C-ONTO</codeCompetence>
+  <niveauMaitriseAttendu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Application</niveauMaitriseAttendu>
+  <referentiel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Référentiel ESPRIT</referentiel>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#GestionDonnees">
+  <rdf:type rdf:resource="#CompetenceBaseDeDonnees"/>
+  <rdf:type rdf:resource="#CompetenceCertifiee"/>
+  <libelleCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Concevoir et interroger une base de données</libelleCompetence>
+  <codeCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">C-BDD</codeCompetence>
+  <niveauMaitriseAttendu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Maîtrise</niveauMaitriseAttendu>
+  <referentiel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ESCO</referentiel>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#LogiqueAlgorithmique">
+  <rdf:type rdf:resource="#CompetenceAlgorithmique"/>
+  <libelleCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Raisonner de façon algorithmique</libelleCompetence>
+  <codeCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">C-ALGO</codeCompetence>
+  <niveauMaitriseAttendu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Maîtrise</niveauMaitriseAttendu>
+  <referentiel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Référentiel ESPRIT</referentiel>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#TravailEnEquipe">
+  <rdf:type rdf:resource="#CompetenceTravailEquipe"/>
+  <rdf:type rdf:resource="#Competence"/>
+  <libelleCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Travailler en équipe</libelleCompetence>
+  <codeCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">C-EQUIPE</codeCompetence>
+  <niveauMaitriseAttendu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Application</niveauMaitriseAttendu>
+  <referentiel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ESCO</referentiel>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#AnglaisTechnique">
+  <rdf:type rdf:resource="#CompetenceLinguistique"/>
+  <libelleCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Communiquer en anglais technique</libelleCompetence>
+  <codeCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">C-ANG</codeCompetence>
+  <niveauMaitriseAttendu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Application</niveauMaitriseAttendu>
+  <referentiel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">CECRL</referentiel>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#MachineLearning">
+  <rdf:type rdf:resource="#CompetenceIA"/>
+  <libelleCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Construire un modèle d'apprentissage</libelleCompetence>
+  <codeCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">C-ML</codeCompetence>
+  <niveauMaitriseAttendu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Notions</niveauMaitriseAttendu>
+  <referentiel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ESCO</referentiel>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#MethodeAgile">
+  <rdf:type rdf:resource="#CompetenceGestionProjet"/>
+  <libelleCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Conduire un projet en méthode agile</libelleCompetence>
+  <codeCompetence rdf:datatype="http://www.w3.org/2001/XMLSchema#string">C-AGILE</codeCompetence>
+  <niveauMaitriseAttendu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Application</niveauMaitriseAttendu>
+  <referentiel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ESCO</referentiel>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#QCM_JavaScript">
+  <rdf:type rdf:resource="#QCM"/>
+  <rdf:type rdf:resource="#EvaluationReussie"/>
+  <note rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">12.0</note>
+  <session rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Principale</session>
+  <coefficient rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</coefficient>
+  <dateEvaluation rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2025-11-03T10:00:00.000</dateEvaluation>
+  <codeEvaluation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EV-WEB101-QCM</codeEvaluation>
+  <dureeEpreuve rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">30</dureeEpreuve>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Examen_Angular">
+  <rdf:type rdf:resource="#ExamenEcrit"/>
+  <rdf:type rdf:resource="#EvaluationReussie"/>
+  <note rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">14.5</note>
+  <session rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Principale</session>
+  <coefficient rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.0</coefficient>
+  <dateEvaluation rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-01-12T09:00:00.000</dateEvaluation>
+  <codeEvaluation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EV-WEB301-P</codeEvaluation>
+  <dureeEpreuve rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">90</dureeEpreuve>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Video_IntroAngular">
+  <rdf:type rdf:resource="#Tutoriel"/>
+  <titre rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Introduction à Angular</titre>
+  <url rdf:datatype="http://www.w3.org/2001/XMLSchema#string">https://elearning.esprit.tn/angular/intro</url>
+  <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">25</dureeMinutes>
+  <langue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FR</langue>
+  <auteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Amel Trabelsi</auteur>
+  <datePublication rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2025-09-01T00:00:00.000</datePublication>
+  <estLibreAcces rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estLibreAcces>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Examen_SQL_Rattrapage">
+  <rdf:type rdf:resource="#ExamenEcrit"/>
+  <note rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.5</note>
+  <session rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Rattrapage</session>
+  <coefficient rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.0</coefficient>
+  <dateEvaluation rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-06-25T09:00:00.000</dateEvaluation>
+  <codeEvaluation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EV-DAT201-R</codeEvaluation>
+  <dureeEpreuve rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">90</dureeEpreuve>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#TD_SQL">
+  <rdf:type rdf:resource="#ExerciceCorrige"/>
+  <titre rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TD requêtes SQL</titre>
+  <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">120</dureeMinutes>
+  <langue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FR</langue>
+  <auteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Karim Ben Ali</auteur>
+  <datePublication rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2025-11-03T00:00:00.000</datePublication>
+  <estLibreAcces rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</estLibreAcces>
+  <url rdf:datatype="http://www.w3.org/2001/XMLSchema#string">https://elearning.esprit.tn/sql/td</url>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Projet_WebSemantique">
+  <rdf:type rdf:resource="#ProjetIntegre"/>
+  <rdf:type rdf:resource="#EvaluationReussie"/>
+  <note rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">16.0</note>
+  <session rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Principale</session>
+  <coefficient rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.5</coefficient>
+  <dateEvaluation rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-05-20T14:00:00.000</dateEvaluation>
+  <codeEvaluation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EV-DAT301-PI</codeEvaluation>
+  <dureeEpreuve rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">120</dureeEpreuve>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Support_WebSemantique">
+  <rdf:type rdf:resource="#Diaporama"/>
+  <titre rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ontologies et OWL</titre>
+  <url rdf:datatype="http://www.w3.org/2001/XMLSchema#string">https://elearning.esprit.tn/ws/owl</url>
+  <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">90</dureeMinutes>
+  <langue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FR</langue>
+  <auteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Karim Ben Ali</auteur>
+  <datePublication rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2025-10-06T00:00:00.000</datePublication>
+  <estLibreAcces rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estLibreAcces>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Protege">
+  <rdf:type rdf:resource="#OutilDeveloppement"/>
+  <titre rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Protégé 5</titre>
+  <url rdf:datatype="http://www.w3.org/2001/XMLSchema#string">https://protege.stanford.edu</url>
+  <langue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">EN</langue>
+  <auteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Stanford University</auteur>
+  <datePublication rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-01-01T00:00:00.000</datePublication>
+  <estLibreAcces rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estLibreAcces>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Prof_BenAli">
+  <rdf:type rdf:resource="#MaitreDeConferences"/>
+  <enseigne rdf:resource="#SQL"/>
+  <enseigne rdf:resource="#WebSemantique"/>
+  <enseigne rdf:resource="#BaseDeDonnees"/>
+  <encadre rdf:resource="#Sarra"/>
+  <rdf:type rdf:resource="#Encadrant"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">karim.benali@esprit.tn</email>
+  <specialite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Web sémantique et bases de données</specialite>
+  <prenom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Karim</prenom>
+  <nom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ben Ali</nom>
+  <telephone rdf:datatype="http://www.w3.org/2001/XMLSchema#string">+216 70 250 011</telephone>
+  <bureau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bloc E - 204</bureau>
+  <anneesExperience rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">14</anneesExperience>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Sarra">
+  <rdf:type rdf:resource="#Etudiant"/>
+  <inscritA rdf:resource="#Ingenieur_DataScience"/>
+  <aValide rdf:resource="#SQL"/>
+  <aValide rdf:resource="#BaseDeDonnees"/>
+  <aPasse rdf:resource="#Projet_WebSemantique"/>
+  <suitParcours rdf:resource="#Parcours_Donnees"/>
+  <viseMetier rdf:resource="#DataScientist"/>
+  <rdf:type rdf:resource="#EtudiantIngenieur"/>
+  <rdf:type rdf:resource="#EtudiantOption"/>
+  <rdf:type rdf:resource="#EtudiantActif"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sarra@esprit.tn</email>
+  <anneeEtude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</anneeEtude>
+  <matricule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">212JMT0178</matricule>
+  <prenom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sarra</prenom>
+  <nom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Haddad</nom>
+  <telephone rdf:datatype="http://www.w3.org/2001/XMLSchema#string">+216 25 178 402</telephone>
+  <dateInscription rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-09-15T00:00:00.000</dateInscription>
+  <estBoursier rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estBoursier>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Prof_Trabelsi">
+  <rdf:type rdf:resource="#MaitreAssistant"/>
+  <enseigne rdf:resource="#JavaScript"/>
+  <enseigne rdf:resource="#TypeScript"/>
+  <enseigne rdf:resource="#Algorithmique"/>
+  <encadre rdf:resource="#Ahmed"/>
+  <encadre rdf:resource="#Yassine"/>
+  <rdf:type rdf:resource="#Encadrant"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">amel.trabelsi@esprit.tn</email>
+  <specialite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Développement web</specialite>
+  <prenom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Amel</prenom>
+  <nom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Trabelsi</nom>
+  <telephone rdf:datatype="http://www.w3.org/2001/XMLSchema#string">+216 70 250 012</telephone>
+  <bureau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bloc E - 112</bureau>
+  <anneesExperience rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</anneesExperience>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ahmed">
+  <rdf:type rdf:resource="#Etudiant"/>
+  <inscritA rdf:resource="#Ingenieur_TWIN"/>
+  <aValide rdf:resource="#JavaScript"/>
+  <aValide rdf:resource="#Algorithmique"/>
+  <aPasse rdf:resource="#QCM_JavaScript"/>
+  <suitParcours rdf:resource="#Parcours_FullStack"/>
+  <viseMetier rdf:resource="#DeveloppeurFullStack"/>
+  <rdf:type rdf:resource="#EtudiantIngenieur"/>
+  <rdf:type rdf:resource="#EtudiantOption"/>
+  <rdf:type rdf:resource="#EtudiantActif"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ahmed@esprit.tn</email>
+  <anneeEtude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</anneeEtude>
+  <matricule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">212JMT0145</matricule>
+  <prenom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ahmed</prenom>
+  <nom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mansour</nom>
+  <telephone rdf:datatype="http://www.w3.org/2001/XMLSchema#string">+216 22 145 301</telephone>
+  <dateInscription rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-09-15T00:00:00.000</dateInscription>
+  <estBoursier rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</estBoursier>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Yassine">
+  <rdf:type rdf:resource="#Etudiant"/>
+  <inscritA rdf:resource="#Ingenieur_TWIN"/>
+  <aValide rdf:resource="#JavaScript"/>
+  <aValide rdf:resource="#TypeScript"/>
+  <aValide rdf:resource="#Algorithmique"/>
+  <aPasse rdf:resource="#Examen_Angular"/>
+  <suitParcours rdf:resource="#Parcours_FullStack"/>
+  <viseMetier rdf:resource="#DeveloppeurFullStack"/>
+  <rdf:type rdf:resource="#EtudiantIngenieur"/>
+  <rdf:type rdf:resource="#EtudiantOption"/>
+  <rdf:type rdf:resource="#EtudiantActif"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">yassine@esprit.tn</email>
+  <anneeEtude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</anneeEtude>
+  <matricule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">211JMT0093</matricule>
+  <prenom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Yassine</prenom>
+  <nom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gharbi</nom>
+  <telephone rdf:datatype="http://www.w3.org/2001/XMLSchema#string">+216 98 093 117</telephone>
+  <dateInscription rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-14T00:00:00.000</dateInscription>
+  <estBoursier rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</estBoursier>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Ing_Jlassi">
+  <rdf:type rdf:resource="#IntervenantIndustriel"/>
+  <enseigne rdf:resource="#Angular"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">walid.jlassi@partenaire.tn</email>
+  <specialite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Frameworks front-end</specialite>
+  <prenom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Walid</prenom>
+  <nom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Jlassi</nom>
+  <telephone rdf:datatype="http://www.w3.org/2001/XMLSchema#string">+216 71 800 300</telephone>
+  <bureau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Externe (partenaire)</bureau>
+  <anneesExperience rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9</anneesExperience>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Prof_Ferjani">
+  <rdf:type rdf:resource="#Professeur"/>
+  <enseigne rdf:resource="#Anglais"/>
+  <estResponsableDe rdf:resource="#Ingenieur_TWIN"/>
+  <rdf:type rdf:resource="#ResponsableFormation"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sonia.ferjani@esprit.tn</email>
+  <specialite rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Communication professionnelle</specialite>
+  <prenom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Sonia</prenom>
+  <nom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ferjani</nom>
+  <telephone rdf:datatype="http://www.w3.org/2001/XMLSchema#string">+216 70 250 010</telephone>
+  <bureau rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bloc A - 301</bureau>
+  <anneesExperience rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">21</anneesExperience>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Mme_Karoui">
+  <rdf:type rdf:resource="#AgentScolarite"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">scolarite@esprit.tn</email>
+  <prenom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nadia</prenom>
+  <nom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Karoui</nom>
+  <telephone rdf:datatype="http://www.w3.org/2001/XMLSchema#string">+216 70 250 000</telephone>
+  <service rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Scolarité</service>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Parcours_RattrapageSQL">
+  <rdf:type rdf:resource="#ParcoursRattrapage"/>
+  <comprendCours rdf:resource="#SQL"/>
+  <comprendCours rdf:resource="#BaseDeDonnees"/>
+  <nomParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Rattrapage SQL</nomParcours>
+  <dureeSemestres rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</dureeSemestres>
+  <codeParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">P-RAT-SQL</codeParcours>
+  <objectifParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Valider le module SQL en rattrapage</objectifParcours>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#DeveloppeurFullStack">
+  <rdf:type rdf:resource="#MetierDeveloppement"/>
+  <requiertCompetence rdf:resource="#DeveloppementFrontend"/>
+  <requiertCompetence rdf:resource="#GestionDonnees"/>
+  <requiertCompetence rdf:resource="#MethodeAgile"/>
+  <intituleMetier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Développeur full-stack</intituleMetier>
+  <codeISCO rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2512</codeISCO>
+  <niveauEtudesRequis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingénieur</niveauEtudesRequis>
+  <estEnTension rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estEnTension>
+  <salaireMoyenDebutant rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2200.0</salaireMoyenDebutant>
+  <secteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Numérique</secteur>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#DataScientist">
+  <rdf:type rdf:resource="#MetierData"/>
+  <requiertCompetence rdf:resource="#GestionDonnees"/>
+  <requiertCompetence rdf:resource="#MachineLearning"/>
+  <intituleMetier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Data scientist</intituleMetier>
+  <codeISCO rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2120</codeISCO>
+  <niveauEtudesRequis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingénieur</niveauEtudesRequis>
+  <estEnTension rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estEnTension>
+  <salaireMoyenDebutant rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2500.0</salaireMoyenDebutant>
+  <secteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Numérique</secteur>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Omar">
+  <rdf:type rdf:resource="#Etudiant"/>
+  <inscritA rdf:resource="#Ingenieur_TroncCommun"/>
+  <aPasse rdf:resource="#Examen_SQL_Rattrapage"/>
+  <rdf:type rdf:resource="#EtudiantTronCommun"/>
+  <rdf:type rdf:resource="#EtudiantARisque"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">omar@esprit.tn</email>
+  <anneeEtude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</anneeEtude>
+  <matricule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">224JMT0310</matricule>
+  <prenom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Omar</prenom>
+  <nom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Riahi</nom>
+  <telephone rdf:datatype="http://www.w3.org/2001/XMLSchema#string">+216 50 310 224</telephone>
+  <dateInscription rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-09-16T00:00:00.000</dateInscription>
+  <estBoursier rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estBoursier>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Lina">
+  <rdf:type rdf:resource="#Etudiant"/>
+  <inscritA rdf:resource="#Licence_GenieLogiciel"/>
+  <aValide rdf:resource="#Algorithmique"/>
+  <rdf:type rdf:resource="#EtudiantLicence"/>
+  <rdf:type rdf:resource="#EtudiantActif"/>
+  <email rdf:datatype="http://www.w3.org/2001/XMLSchema#string">lina@esprit.tn</email>
+  <anneeEtude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</anneeEtude>
+  <matricule rdf:datatype="http://www.w3.org/2001/XMLSchema#string">224LGL0057</matricule>
+  <prenom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Lina</prenom>
+  <nom rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bouzid</nom>
+  <telephone rdf:datatype="http://www.w3.org/2001/XMLSchema#string">+216 29 057 640</telephone>
+  <dateInscription rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-09-16T00:00:00.000</dateInscription>
+  <estBoursier rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</estBoursier>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Assiduite_Omar">
+  <rdf:type rdf:resource="#TauxAssiduite"/>
+  <concerne rdf:resource="#Omar"/>
+  <valeur rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.55</valeur>
+  <seuilAlerte rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.6</seuilAlerte>
+  <dateMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-01T08:00:00.000</dateMesure>
+  <periodeMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mensuelle</periodeMesure>
+  <sourceDonnees rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Système de présence</sourceDonnees>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Assiduite_Ahmed">
+  <rdf:type rdf:resource="#TauxAssiduite"/>
+  <concerne rdf:resource="#Ahmed"/>
+  <valeur rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.92</valeur>
+  <seuilAlerte rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.6</seuilAlerte>
+  <dateMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-01T08:00:00.000</dateMesure>
+  <periodeMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mensuelle</periodeMesure>
+  <sourceDonnees rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Système de présence</sourceDonnees>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Reussite_Omar">
+  <rdf:type rdf:resource="#TauxReussite"/>
+  <concerne rdf:resource="#Omar"/>
+  <valeur rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.4</valeur>
+  <seuilAlerte rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</seuilAlerte>
+  <dateMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-01T08:00:00.000</dateMesure>
+  <periodeMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mensuelle</periodeMesure>
+  <sourceDonnees rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Relevé de notes</sourceDonnees>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Stress_Sarra">
+  <rdf:type rdf:resource="#NiveauStress"/>
+  <concerne rdf:resource="#Sarra"/>
+  <valeur rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.4</valeur>
+  <seuilAlerte rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.7</seuilAlerte>
+  <dateMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-01T08:00:00.000</dateMesure>
+  <periodeMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mensuelle</periodeMesure>
+  <sourceDonnees rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Questionnaire bien-être</sourceDonnees>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Tuteur_EduBot">
+  <rdf:type rdf:resource="#TuteurConversationnel"/>
+  <assiste rdf:resource="#Omar"/>
+  <recommande rdf:resource="#Parcours_RattrapageSQL"/>
+  <recommande rdf:resource="#TD_SQL"/>
+  <rdf:type rdf:resource="#AgentIAFiable"/>
+  <modeleIA rdf:datatype="http://www.w3.org/2001/XMLSchema#string">LLM conversationnel</modeleIA>
+  <versionModele rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2.1</versionModele>
+  <tauxPrecision rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.92</tauxPrecision>
+  <estExplicable rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estExplicable>
+  <dateDeploiement rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-01T00:00:00.000</dateDeploiement>
+  <fournisseur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Équipe EduOnto</fournisseur>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Moteur_Reco">
+  <rdf:type rdf:resource="#RecommandationCours"/>
+  <assiste rdf:resource="#Ahmed"/>
+  <recommande rdf:resource="#Angular"/>
+  <rdf:type rdf:resource="#AgentIAFiable"/>
+  <modeleIA rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Filtrage collaboratif</modeleIA>
+  <versionModele rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1.4</versionModele>
+  <tauxPrecision rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.95</tauxPrecision>
+  <estExplicable rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estExplicable>
+  <dateDeploiement rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-02-01T00:00:00.000</dateDeploiement>
+  <fournisseur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Équipe EduOnto</fournisseur>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Correcteur_AutoCode">
+  <rdf:type rdf:resource="#CorrecteurCode"/>
+  <corrige rdf:resource="#QCM_JavaScript"/>
+  <modeleIA rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tests unitaires + IA</modeleIA>
+  <versionModele rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0.9</versionModele>
+  <tauxPrecision rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.85</tauxPrecision>
+  <estExplicable rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</estExplicable>
+  <dateDeploiement rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2025-10-01T00:00:00.000</dateDeploiement>
+  <fournisseur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Open source</fournisseur>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Badge_Angular_Ahmed">
+  <rdf:type rdf:resource="#BadgeCompetence"/>
+  <atteste rdf:resource="#DeveloppementFrontend"/>
+  <delivreA rdf:resource="#Ahmed"/>
+  <estVerifie rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estVerifie>
+  <emetteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ESPRIT</emetteur>
+  <dateEmission rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-06-20T00:00:00.000</dateEmission>
+  <dateExpiration rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2029-06-20T00:00:00.000</dateExpiration>
+  <hashBlockchain rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0x9f3a…c21e</hashBlockchain>
+  <urlVerification rdf:datatype="http://www.w3.org/2001/XMLSchema#string">https://verify.esprit.tn/badge_angular_ahmed</urlVerification>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#MicroCert_SQL_Sarra">
+  <rdf:type rdf:resource="#MicroCertification"/>
+  <atteste rdf:resource="#GestionDonnees"/>
+  <delivreA rdf:resource="#Sarra"/>
+  <estVerifie rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estVerifie>
+  <emetteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ESPRIT</emetteur>
+  <dateEmission rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-07-02T00:00:00.000</dateEmission>
+  <dateExpiration rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2028-07-02T00:00:00.000</dateExpiration>
+  <urlVerification rdf:datatype="http://www.w3.org/2001/XMLSchema#string">https://verify.esprit.tn/microcert_sql_sarra</urlVerification>
+  <hashBlockchain rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0x47b1…9ad0</hashBlockchain>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Badge_Hackathon_Yassine">
+  <rdf:type rdf:resource="#BadgeParticipation"/>
+  <atteste rdf:resource="#TravailEnEquipe"/>
+  <delivreA rdf:resource="#Yassine"/>
+  <estVerifie rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</estVerifie>
+  <emetteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Club DevTWIN</emetteur>
+  <dateEmission rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-04-12T00:00:00.000</dateEmission>
+  <urlVerification rdf:datatype="http://www.w3.org/2001/XMLSchema#string">https://verify.esprit.tn/badge_hackathon_yassine</urlVerification>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#IngenieurDevOps">
+  <rdf:type rdf:resource="#MetierInfrastructure"/>
+  <requiertCompetence rdf:resource="#LogiqueAlgorithmique"/>
+  <requiertCompetence rdf:resource="#MethodeAgile"/>
+  <intituleMetier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingénieur DevOps</intituleMetier>
+  <codeISCO rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2523</codeISCO>
+  <niveauEtudesRequis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingénieur</niveauEtudesRequis>
+  <estEnTension rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</estEnTension>
+  <salaireMoyenDebutant rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2400.0</salaireMoyenDebutant>
+  <secteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Numérique</secteur>
+</owl:NamedIndividual>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Professeur"/>
+    <rdf:Description rdf:about="#MaitreDeConferences"/>
+    <rdf:Description rdf:about="#MaitreAssistant"/>
+    <rdf:Description rdf:about="#Assistant"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#AgentScolarite"/>
+    <rdf:Description rdf:about="#Bibliothecaire"/>
+    <rdf:Description rdf:about="#ChargeRelationsEntreprises"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Etudiant"/>
+    <rdf:Description rdf:about="#Enseignant"/>
+    <rdf:Description rdf:about="#PersonnelAdministratif"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#IngenieurInformatique"/>
+    <rdf:Description rdf:about="#IngenieurTelecom"/>
+    <rdf:Description rdf:about="#IngenieurGenieCivil"/>
+    <rdf:Description rdf:about="#IngenieurElectromecanique"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Licence"/>
+    <rdf:Description rdf:about="#Master"/>
+    <rdf:Description rdf:about="#CycleIngenieur"/>
+    <rdf:Description rdf:about="#Doctorat"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Certification"/>
+    <rdf:Description rdf:about="#FormationEnLigne"/>
+    <rdf:Description rdf:about="#Bootcamp"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#CoursFondamental"/>
+    <rdf:Description rdf:about="#CoursDeSpecialite"/>
+    <rdf:Description rdf:about="#CoursTransversal"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#CompetenceFrontend"/>
+    <rdf:Description rdf:about="#CompetenceBackend"/>
+    <rdf:Description rdf:about="#CompetenceMobile"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#CompetenceBaseDeDonnees"/>
+    <rdf:Description rdf:about="#CompetenceIA"/>
+    <rdf:Description rdf:about="#CompetenceWebSemantique"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#CompetenceCloud"/>
+    <rdf:Description rdf:about="#CompetenceDevOps"/>
+    <rdf:Description rdf:about="#CompetenceSecurite"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#CompetenceProgrammation"/>
+    <rdf:Description rdf:about="#CompetenceDonnees"/>
+    <rdf:Description rdf:about="#CompetenceInfrastructure"/>
+    <rdf:Description rdf:about="#CompetenceScientifique"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#CompetenceCommunication"/>
+    <rdf:Description rdf:about="#CompetenceLinguistique"/>
+    <rdf:Description rdf:about="#CompetenceGestionProjet"/>
+    <rdf:Description rdf:about="#CompetenceTravailEquipe"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#QCM"/>
+    <rdf:Description rdf:about="#DevoirSurveille"/>
+    <rdf:Description rdf:about="#MiniProjet"/>
+    <rdf:Description rdf:about="#ExposeOral"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#ExamenEcrit"/>
+    <rdf:Description rdf:about="#ExamenPratique"/>
+    <rdf:Description rdf:about="#ProjetFinal"/>
+    <rdf:Description rdf:about="#Soutenance"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Video"/>
+    <rdf:Description rdf:about="#DocumentNumerique"/>
+    <rdf:Description rdf:about="#Exercice"/>
+    <rdf:Description rdf:about="#Logiciel"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#GenieLogiciel"/>
+    <rdf:Description rdf:about="#ScienceDesDonnees"/>
+    <rdf:Description rdf:about="#ReseauxEtTelecom"/>
+    <rdf:Description rdf:about="#CyberSecurite"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#DomaineInformatique"/>
+    <rdf:Description rdf:about="#DomaineMathematiques"/>
+    <rdf:Description rdf:about="#DomaineSciencesHumaines"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#TauxAssiduite"/>
+    <rdf:Description rdf:about="#TempsConnexion"/>
+    <rdf:Description rdf:about="#TauxParticipation"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#IndicateurEngagement"/>
+    <rdf:Description rdf:about="#IndicateurPerformance"/>
+    <rdf:Description rdf:about="#IndicateurBienEtre"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#TuteurIntelligent"/>
+    <rdf:Description rdf:about="#SystemeRecommandation"/>
+    <rdf:Description rdf:about="#CorrecteurAutomatique"/>
+    <rdf:Description rdf:about="#DetecteurPlagiat"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#BadgeNumerique"/>
+    <rdf:Description rdf:about="#MicroCertification"/>
+    <rdf:Description rdf:about="#DiplomeNumerique"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#MetierDeveloppement"/>
+    <rdf:Description rdf:about="#MetierData"/>
+    <rdf:Description rdf:about="#MetierInfrastructure"/>
+    <rdf:Description rdf:about="#MetierCybersecurite"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Personne"/>
+    <rdf:Description rdf:about="#Formation"/>
+    <rdf:Description rdf:about="#Cours"/>
+    <rdf:Description rdf:about="#Competence"/>
+    <rdf:Description rdf:about="#Evaluation"/>
+    <rdf:Description rdf:about="#RessourcePedagogique"/>
+    <rdf:Description rdf:about="#ParcoursApprentissage"/>
+    <rdf:Description rdf:about="#Domaine"/>
+    <rdf:Description rdf:about="#IndicateurApprentissage"/>
+    <rdf:Description rdf:about="#AgentPedagogiqueIA"/>
+    <rdf:Description rdf:about="#PreuveDeCompetence"/>
+    <rdf:Description rdf:about="#Metier"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDifferent>
+  <owl:distinctMembers rdf:parseType="Collection">
+    <rdf:Description rdf:about="#ProgrammationFondamentale"/>
+    <rdf:Description rdf:about="#DeveloppementWeb"/>
+    <rdf:Description rdf:about="#BasesDeDonnees"/>
+    <rdf:Description rdf:about="#IngenierieDesConnaissances"/>
+    <rdf:Description rdf:about="#IntelligenceArtificielle"/>
+    <rdf:Description rdf:about="#ReseauxInformatiques"/>
+    <rdf:Description rdf:about="#StatistiqueDescriptive"/>
+    <rdf:Description rdf:about="#AnglaisProfessionnel"/>
+    <rdf:Description rdf:about="#Ingenieur_TWIN"/>
+    <rdf:Description rdf:about="#Ingenieur_DataScience"/>
+    <rdf:Description rdf:about="#Ingenieur_TroncCommun"/>
+    <rdf:Description rdf:about="#Licence_GenieLogiciel"/>
+    <rdf:Description rdf:about="#DeveloppementFrontend"/>
+    <rdf:Description rdf:about="#ModelisationOntologie"/>
+    <rdf:Description rdf:about="#GestionDonnees"/>
+    <rdf:Description rdf:about="#LogiqueAlgorithmique"/>
+    <rdf:Description rdf:about="#TravailEnEquipe"/>
+    <rdf:Description rdf:about="#AnglaisTechnique"/>
+    <rdf:Description rdf:about="#MachineLearning"/>
+    <rdf:Description rdf:about="#MethodeAgile"/>
+    <rdf:Description rdf:about="#Algorithmique"/>
+    <rdf:Description rdf:about="#JavaScript"/>
+    <rdf:Description rdf:about="#TypeScript"/>
+    <rdf:Description rdf:about="#Angular"/>
+    <rdf:Description rdf:about="#BaseDeDonnees"/>
+    <rdf:Description rdf:about="#SQL"/>
+    <rdf:Description rdf:about="#WebSemantique"/>
+    <rdf:Description rdf:about="#Anglais"/>
+    <rdf:Description rdf:about="#Prof_BenAli"/>
+    <rdf:Description rdf:about="#Prof_Trabelsi"/>
+    <rdf:Description rdf:about="#Ing_Jlassi"/>
+    <rdf:Description rdf:about="#Prof_Ferjani"/>
+    <rdf:Description rdf:about="#Mme_Karoui"/>
+    <rdf:Description rdf:about="#Examen_Angular"/>
+    <rdf:Description rdf:about="#Projet_WebSemantique"/>
+    <rdf:Description rdf:about="#QCM_JavaScript"/>
+    <rdf:Description rdf:about="#Examen_SQL_Rattrapage"/>
+    <rdf:Description rdf:about="#Video_IntroAngular"/>
+    <rdf:Description rdf:about="#Support_WebSemantique"/>
+    <rdf:Description rdf:about="#TD_SQL"/>
+    <rdf:Description rdf:about="#Protege"/>
+    <rdf:Description rdf:about="#Parcours_FullStack"/>
+    <rdf:Description rdf:about="#Parcours_Donnees"/>
+    <rdf:Description rdf:about="#Parcours_RattrapageSQL"/>
+    <rdf:Description rdf:about="#Ahmed"/>
+    <rdf:Description rdf:about="#Sarra"/>
+    <rdf:Description rdf:about="#Yassine"/>
+    <rdf:Description rdf:about="#Omar"/>
+    <rdf:Description rdf:about="#Lina"/>
+    <rdf:Description rdf:about="#Assiduite_Omar"/>
+    <rdf:Description rdf:about="#Assiduite_Ahmed"/>
+    <rdf:Description rdf:about="#Reussite_Omar"/>
+    <rdf:Description rdf:about="#Stress_Sarra"/>
+    <rdf:Description rdf:about="#Tuteur_EduBot"/>
+    <rdf:Description rdf:about="#Moteur_Reco"/>
+    <rdf:Description rdf:about="#Correcteur_AutoCode"/>
+    <rdf:Description rdf:about="#Badge_Angular_Ahmed"/>
+    <rdf:Description rdf:about="#MicroCert_SQL_Sarra"/>
+    <rdf:Description rdf:about="#Badge_Hackathon_Yassine"/>
+    <rdf:Description rdf:about="#DeveloppeurFullStack"/>
+    <rdf:Description rdf:about="#DataScientist"/>
+    <rdf:Description rdf:about="#IngenieurDevOps"/>
+  </owl:distinctMembers>
+</owl:AllDifferent>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#EtudiantLicence"/>
+    <rdf:Description rdf:about="#EtudiantMaster"/>
+    <rdf:Description rdf:about="#EtudiantIngenieur"/>
+    <rdf:Description rdf:about="#Doctorant"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+
+</rdf:RDF>

@@ -1,0 +1,7 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+rdflib>=7.0
+spacy>=3.7
+owlready2>=0.46        # uniquement pour scripts/build_inferred.py (nécessite Java)
+# transformers>=4.40   # optionnel : repli zero-shot (EDUONTO_HF=1)
+# torch>=2.2           # optionnel : requis par transformers

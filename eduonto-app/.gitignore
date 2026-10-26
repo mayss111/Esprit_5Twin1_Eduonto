@@ -1,0 +1,5 @@
+node_modules/
+dist/
+__pycache__/
+.venv/
+ontology/EduOnto_runtime.ttl
