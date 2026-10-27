@@ -3,3 +3,4 @@ dist/
 __pycache__/
 .venv/
 ontology/EduOnto_runtime.ttl
+frontend/captures/
