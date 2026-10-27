@@ -72,7 +72,8 @@ class Translator:
         for r in store.select(f"SELECT ?i ?v WHERE {{ VALUES ?p {{ {valeurs} }} ?i ?p ?v }}"):
             labels.setdefault(r["i"], set()).add(normalize(str(r["v"])))
         for ident in entity_types:
-            phrases = {normalize(split_camel(ident))} | labels.get(ident, set())
+            # « JavaScript » → « java script » ET « javascript » : l'identifiant collé est aussi reconnu
+            phrases = {normalize(split_camel(ident)), normalize(ident.replace("_", " "))} | labels.get(ident, set())
             patterns = [self.nlp.make_doc(ph) for ph in phrases if len(ph) > 2]
             if patterns:
                 matcher.add("IND|" + ident, patterns)
