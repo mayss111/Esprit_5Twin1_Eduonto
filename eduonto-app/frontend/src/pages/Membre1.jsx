@@ -47,6 +47,7 @@ export default function Membre1() {
       <QueryCard titre="Classes affirmées / déduites d'un étudiant (owl:equivalentClass)" url="/api/m1/etudiants/{etudiant}/profil" params={{ etudiant: "Omar" }} />
       <QueryCard titre="Étudiants boursiers (FILTER booléen)" url="/api/m1/boursiers" query={{ formation: "" }} />
       <QueryCard titre="Enseignants par spécialité (CONTAINS + GROUP_CONCAT)" url="/api/m1/enseignants" query={{ specialite: "web" }} />
+      <QueryCard titre="Enseignants avec au moins N années d'expérience" url="/api/m1/enseignants/experience" query={{ min: 10 }} />
       <QueryCard titre="Étudiants d'une formation" url="/api/m1/formations/{formation}/etudiants" params={{ formation: "Ingenieur_TWIN" }} />
       <QueryCard titre="Statistiques par formation (COUNT, SUM(IF), sous-requêtes)" url="/api/m1/formations/statistiques" />
       <QueryCard titre="Encadrements (relation + inverse, UNION)" url="/api/m1/encadrements" />

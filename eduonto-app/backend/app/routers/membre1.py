@@ -6,6 +6,7 @@ Requêtes SPARQL de ce membre (CRUD, filtres, recherche, agrégats, raisonnement
   READ    GET  /api/m1/etudiants/{id}/profil              classes DÉDUITES par HermiT (owl:equivalentClass)
   READ    GET  /api/m1/boursiers?formation=               filtre booléen (estBoursier = true)
   READ    GET  /api/m1/enseignants?specialite=web         recherche CONTAINS + grade (sous-classe) + GROUP_CONCAT
+  READ    GET  /api/m1/enseignants/experience?min=10   filtre numérique sur anneesExperience
   READ    GET  /api/m1/formations/{id}/etudiants          étudiants d'une formation (inscritA)
   READ    GET  /api/m1/formations/statistiques            agrégats COUNT / SUM(IF) + taux de boursiers
   READ    GET  /api/m1/encadrements                       relation et son inverse (UNION)
@@ -118,6 +119,21 @@ def enseignants(specialite: str | None = None):
         }}
         GROUP BY ?enseignant ?prenom ?nom ?grade ?specialite ?experience
         ORDER BY DESC(?experience)""")
+
+
+@router.get("/enseignants/experience")
+def enseignants_experience(min: int = 10):
+    """Enseignants qui ont au moins N années d'expérience (filtre numérique sur anneesExperience)."""
+    verifier_attribut("anneesExperience", min)
+    return select(f"""
+        SELECT DISTINCT ?enseignant ?prenom ?nom ?specialite ?experience WHERE {{
+          ?enseignant a ?g . ?g rdfs:subClassOf* edu:Enseignant .
+          ?enseignant edu:anneesExperience ?experience .
+          FILTER(?experience >= {int(min)})
+          OPTIONAL {{ ?enseignant edu:prenom ?prenom }}
+          OPTIONAL {{ ?enseignant edu:nom ?nom }}
+          OPTIONAL {{ ?enseignant edu:specialite ?specialite }}
+        }} ORDER BY DESC(?experience) ?enseignant""")
 
 
 # ======================= READ : formations =======================

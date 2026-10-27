@@ -18,6 +18,7 @@ client = TestClient(app)
 ROUTES_GET = [
     "/api/m1/etudiants", "/api/m1/etudiants?annee=4", "/api/m1/etudiants/Ahmed/formation",
     "/api/m1/etudiants/Ahmed/profil", "/api/m1/boursiers", "/api/m1/enseignants?specialite=web",
+    "/api/m1/enseignants/experience?min=10",
     "/api/m1/formations/Ingenieur_TWIN/etudiants", "/api/m1/formations/statistiques", "/api/m1/encadrements",
     "/api/m2/cours", "/api/m2/cours?domaine=GenieLogiciel", "/api/m2/cours/niveau/Avancé", "/api/m2/cours/credits?min=4",
     "/api/m2/cours/Angular/prerequis", "/api/m2/cours/JavaScript/suite", "/api/m2/recherche?q=web",

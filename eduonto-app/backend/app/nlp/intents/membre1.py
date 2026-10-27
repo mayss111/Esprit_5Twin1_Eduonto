@@ -95,6 +95,21 @@ INTENTS = [
   OPTIONAL {{ ?etudiant edu:inscritA ?formation }}
 }} GROUP BY ?formation ORDER BY DESC(?nbEtudiants) ?formation"""},
 
+    # « Quels enseignants ont plus de 10 ans d'expérience ? »
+    {"name": "enseignants_experience", "membre": 1,
+     "description": "les enseignants qui ont au moins un certain nombre d'années d'expérience",
+     "keywords": ["experience", "anciennete", "annees", "enseignant", "enseignants", "professeur"],
+     "slots": {"n": "number"}, "op_defaut": ">=",
+     "exemples": ["Quels enseignants ont plus de 10 ans d'expérience ?",
+                  "Professeurs avec au moins 10 années d'expérience",
+                  "Qui a plus de 15 ans d'ancienneté ?"],
+     "template": """SELECT DISTINCT ?enseignant ?prenom ?nom ?experience WHERE {{
+  ?enseignant a/rdfs:subClassOf* edu:Enseignant ; edu:anneesExperience ?experience .
+  FILTER(?experience {op} {n})
+  OPTIONAL {{ ?enseignant edu:prenom ?prenom }}
+  OPTIONAL {{ ?enseignant edu:nom ?nom }}
+}} ORDER BY DESC(?experience)"""},
+
     # « Qui encadre Ahmed ? »
     {"name": "encadrant_etudiant", "membre": 1,
      "description": "l'enseignant qui encadre ou supervise un étudiant (son tuteur)",
