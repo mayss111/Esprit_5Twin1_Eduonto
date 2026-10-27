@@ -66,6 +66,8 @@ INTENTS = [
     {"name": "nb_competences_metier", "membre": 3,
      "description": "le nombre de compétences demandées par chaque métier",
      "keywords": ["combien", "nombre", "chaque", "par metier", "demande", "demandent", "exige"],
+     # « combien » seul ne suffit pas : la question doit parler de compétences ou de métiers
+     "mots_requis": ["competence", "competences", "metier", "metiers", "emploi", "emplois"],
      "slots": {},
      "exemples": ["Combien de compétences demande chaque métier ?", "Nombre de compétences requises par métier",
                   "Quel métier exige le plus de compétences ?"],

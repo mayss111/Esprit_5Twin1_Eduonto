@@ -10,6 +10,8 @@ Format d'une intention :
                                                 #   ou {"enum": ["Principale", "Rattrapage"]} (valeur citée dans la question)
       "exemples": ["Quels sont les prérequis d'Angular ?", ...],  # optionnel : similarité sémantique
       "op_defaut": ">=",                        # optionnel : opérateur si la question n'en exprime pas ({op})
+      "mots_requis": ["combien", "nombre"],     # optionnel : au moins un de ces mots doit être dans la question
+                                                #   ([[...], [...]] : un mot de chaque groupe)
       "template": "SELECT ... edu:{cours} ...", # requête SPARQL avec les trous entre {}
     }
 Dans les templates, doubler les accolades SPARQL : {{ et }}.

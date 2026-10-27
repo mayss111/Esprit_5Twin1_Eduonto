@@ -67,6 +67,34 @@ INTENTS = [
   OPTIONAL {{ ?etudiant edu:anneeEtude ?annee }}
 }} ORDER BY ?annee ?nom"""},
 
+    # « Combien d'étudiants sont inscrits en TWIN ? » — agrégat COUNT sur une formation
+    {"name": "nb_etudiants_formation", "membre": 1,
+     "description": "le nombre d'étudiants inscrits dans une formation donnée",
+     "keywords": ["combien", "nombre", "effectif", "etudiants", "inscrits", "inscrit"],
+     "mots_requis": ["combien", "nombre", "effectif", "effectifs"],
+     "slots": {"formation": "Formation"},
+     "exemples": ["Combien d'étudiants sont inscrits en Data Science ?", "Quel est l'effectif de la formation TWIN ?",
+                  "Nombre d'inscrits en licence génie logiciel"],
+     "template": """SELECT ?formation (COUNT(DISTINCT ?etudiant) AS ?nbEtudiants) WHERE {{
+  VALUES ?formation {{ edu:{formation} }}
+  OPTIONAL {{ ?etudiant edu:inscritA ?formation }}
+}} GROUP BY ?formation"""},
+
+    # « Combien d'étudiants par formation ? » — même agrégat, pour toutes les formations
+    {"name": "nb_etudiants_par_formation", "membre": 1,
+     "description": "le nombre d'étudiants de chaque formation",
+     "keywords": ["combien", "nombre", "effectif", "effectifs", "etudiants", "par formation", "chaque"],
+     "mots_requis": [["combien", "nombre", "effectif", "effectifs"],
+                     ["etudiant", "etudiants", "inscrit", "inscrits", "effectif", "effectifs",
+                      "formation", "formations", "filiere", "filieres"]],
+     "slots": {},
+     "exemples": ["Combien d'étudiants par formation ?", "Effectif de chaque formation",
+                  "Nombre d'étudiants dans chaque filière"],
+     "template": """SELECT ?formation (COUNT(DISTINCT ?etudiant) AS ?nbEtudiants) WHERE {{
+  ?formation a/rdfs:subClassOf* edu:Formation ; a owl:NamedIndividual .
+  OPTIONAL {{ ?etudiant edu:inscritA ?formation }}
+}} GROUP BY ?formation ORDER BY DESC(?nbEtudiants) ?formation"""},
+
     # « Qui encadre Ahmed ? »
     {"name": "encadrant_etudiant", "membre": 1,
      "description": "l'enseignant qui encadre ou supervise un étudiant (son tuteur)",

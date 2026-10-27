@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
+import { Award, BadgeCheck, ChartColumn, ClipboardCheck, Database, Gauge, Layers, PenLine, Search, TimerOff } from "lucide-react";
 import { api } from "../api.js";
 import ClassePage from "../components/ClassePage.jsx";
 import QueryCard from "../components/QueryCard.jsx";
 import ResultTable from "../components/ResultTable.jsx";
+import Section from "../components/Section.jsx";
+import StatCard from "../components/StatCard.jsx";
+import { useToast } from "../components/Toast.jsx";
 
 // MEMBRE 4 — Evaluation + PreuveDeCompetence
 const CLASSES = ["Evaluation", "PreuveDeCompetence"];
@@ -15,26 +19,29 @@ export default function Membre4() {
 
   return (
     <div>
-      <h2>Membre 4 · Evaluation + PreuveDeCompetence</h2>
+      <ChiffresCles version={version} />
 
-      <h3>Tableau de bord des notes</h3>
-      <div className="grid2">
-        <Statistiques version={version} />
-        <SaisieNote onCree={rafraichir} />
-      </div>
+      <Section icone={ChartColumn} titre="Tableau de bord des notes">
+        <div className="grid2" style={{ marginTop: 0 }}>
+          <Statistiques version={version} />
+          <SaisieNote onCree={rafraichir} />
+        </div>
+      </Section>
 
-      <h3>Preuves de compétence</h3>
-      <Preuves version={version} onChange={rafraichir} />
+      <Section icone={Award} titre="Preuves de compétence">
+        <Preuves version={version} onChange={rafraichir} />
+      </Section>
 
-      <h3>Gestion des individus (CRUD)</h3>
-      <div className="tabs">
-        {CLASSES.map((c) => (
-          <button key={c} className={c === classe ? "active" : ""} onClick={() => setClasse(c)}>{c}</button>
-        ))}
-      </div>
-      <ClassePage key={`${classe}-${version}`} classe={classe} />
+      <Section icone={Layers} titre="Gestion des individus (CRUD)">
+        <div className="tabs">
+          {CLASSES.map((c) => (
+            <button key={c} className={c === classe ? "active" : ""} onClick={() => setClasse(c)}>{c}</button>
+          ))}
+        </div>
+        <ClassePage key={`${classe}-${version}`} classe={classe} />
+      </Section>
 
-      <h3>Requêtes SPARQL</h3>
+      <Section icone={Database} titre="Requêtes SPARQL">
       <QueryCard titre="Évaluations au-dessus d'une note (FILTER)" url="/api/m4/evaluations" query={{ noteMin: 12 }} />
       <QueryCard titre="Évaluations d'une session (Principale / Rattrapage)" url="/api/m4/evaluations/session/{session}" params={{ session: "Rattrapage" }} />
       <QueryCard titre="Moyenne pondérée par étudiant (SUM coef / GROUP BY)" url="/api/m4/moyennes-ponderees" query={{ etudiant: "" }} />
@@ -42,6 +49,30 @@ export default function Membre4() {
       <QueryCard titre="Recherche de preuves (CONTAINS)" url="/api/m4/preuves" query={{ recherche: "esprit" }} />
       <QueryCard titre="Preuves expirées (date < aujourd'hui)" url="/api/m4/preuves-expirees" />
       <QueryCard titre="Compétences certifiées" url="/api/m4/competences-certifiees" />
+      </Section>
+    </div>
+  );
+}
+
+// ---------- Chiffres clés (routes existantes du membre 4) ----------
+function ChiffresCles({ version }) {
+  const [c, setC] = useState(null);
+  useEffect(() => {
+    Promise.all([api.get("/api/m4/evaluations"), api.get("/api/m4/preuves"), api.get("/api/m4/preuves-expirees")])
+      .then(([evals, preuves, expirees]) => {
+        const notes = [...new Map(evals.map((e) => [e.evaluation, Number(e.note)])).values()];
+        setC({ evaluations: notes.length,
+               moyenne: notes.length ? (notes.reduce((t, n) => t + n, 0) / notes.length).toFixed(2).replace(".", ",") : "—",
+               verifiees: preuves.filter((p) => p.verifiee).length, preuves: preuves.length, expirees: expirees.length });
+      })
+      .catch(() => setC({}));
+  }, [version]);
+  return (
+    <div className="grille-stats">
+      <StatCard icone={ClipboardCheck} valeur={c?.evaluations} libelle="évaluations" chargement={!c} />
+      <StatCard icone={Gauge} valeur={c?.moyenne} libelle="moyenne générale /20" ton="ok" chargement={!c} />
+      <StatCard icone={BadgeCheck} valeur={c && `${c.verifiees}/${c.preuves}`} libelle="preuves vérifiées" ton="deduit" chargement={!c} />
+      <StatCard icone={TimerOff} valeur={c?.expirees} libelle="preuves expirées" ton="danger" chargement={!c} />
     </div>
   );
 }
@@ -73,7 +104,7 @@ function SaisieNote({ onCree }) {
   const [f, setF] = useState(vide);
   const [etudiants, setEtudiants] = useState([]);
   const [cours, setCours] = useState([]);
-  const [msg, setMsg] = useState("");
+  const toast = useToast();
 
   useEffect(() => {
     api.individus("Etudiant").then(setEtudiants);
@@ -87,17 +118,17 @@ function SaisieNote({ onCree }) {
     try {
       const id = f.id || `${f.type}_${f.cours}_${f.etudiant}`;
       await api.post("/api/m4/evaluations", { ...f, id, note: Number(f.note), coefficient: Number(f.coefficient) });
-      setMsg(`✔ ${id} enregistrée`);
+      toast.succes(`${id} enregistrée`);
       setF(vide);
       onCree();
     } catch (err) {
-      setMsg(`✘ ${err.message}`);
+      toast.erreur(err.message);
     }
   }
 
   return (
     <form className="card" onSubmit={envoyer}>
-      <h4>Saisir une note</h4>
+      <h4><PenLine size={16} style={{ verticalAlign: "-3px" }} /> Saisir une note</h4>
       <div className="row">
         <label>Étudiant
           <select required {...champ("etudiant")}>
@@ -124,7 +155,6 @@ function SaisieNote({ onCree }) {
       </div>
       <label>Identifiant (optionnel)<input placeholder="généré automatiquement" {...champ("id")} /></label>
       <button className="primary" type="submit">Enregistrer</button>
-      {msg && <p className={msg.startsWith("✔") ? "info" : "error"}>{msg}</p>}
       <p className="muted">INSERT DATA : l'évaluation + aPasse (étudiant) + estEvaluePar (cours)</p>
     </form>
   );
@@ -134,27 +164,36 @@ function SaisieNote({ onCree }) {
 function Preuves({ version, onChange }) {
   const [preuves, setPreuves] = useState([]);
   const [recherche, setRecherche] = useState("");
+  const toast = useToast();
 
   const charger = () =>
     api.get(`/api/m4/preuves${recherche ? `?recherche=${encodeURIComponent(recherche)}` : ""}`).then(setPreuves);
   useEffect(() => { charger(); }, [version]);
 
   async function verifier(id) {
-    await api.put(`/api/m4/preuves/${id}/verifier`);
-    onChange();
+    try {
+      await api.put(`/api/m4/preuves/${id}/verifier`);
+      toast.succes(`${id} vérifiée : sa compétence devient certifiée`);
+      onChange();
+    } catch (err) {
+      toast.erreur(err.message);
+    }
   }
 
   return (
     <div className="card">
-      <div className="row">
-        <input placeholder="Rechercher (étudiant, émetteur, compétence…)" value={recherche}
-               onChange={(e) => setRecherche(e.target.value)} onKeyDown={(e) => e.key === "Enter" && charger()} />
+      <div className="barre-outils">
+        <label className="champ-recherche">
+          <Search size={16} />
+          <input placeholder="Rechercher (étudiant, émetteur, compétence…)" value={recherche} aria-label="Rechercher une preuve"
+                 onChange={(e) => setRecherche(e.target.value)} onKeyDown={(e) => e.key === "Enter" && charger()} />
+        </label>
         <button onClick={charger}>Rechercher</button>
       </div>
       <ResultTable
         rows={preuves}
         actions={(p) =>
-          p.verifiee ? <span className="badge ok">vérifiée</span>
+          p.verifiee ? <span className="badge ok"><BadgeCheck size={13} /> vérifiée</span>
                      : <button className="small primary" onClick={() => verifier(p.preuve)}>Vérifier</button>}
       />
     </div>
