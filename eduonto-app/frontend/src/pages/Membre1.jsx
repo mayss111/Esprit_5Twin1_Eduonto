@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { BadgeCheck, Brain, Database, GraduationCap, HandCoins, Layers, School, UserPlus, Users } from "lucide-react";
 import { api } from "../api.js";
+import Champ from "../components/Champ.jsx";
 import ClassePage from "../components/ClassePage.jsx";
 import QueryCard from "../components/QueryCard.jsx";
 import Section from "../components/Section.jsx";
 import StatCard from "../components/StatCard.jsx";
 import { useToast } from "../components/Toast.jsx";
+import { choix, emailOptionnel, entier, identifiant, invalide, nomPersonne } from "../validation.js";
 
 // MEMBRE 1 — Personne + Formation
 const CLASSES = ["Personne", "Formation"];
@@ -102,23 +104,50 @@ function Inscription({ onCree }) {
   const vide = { prenom: "", nom: "", email: "", formation: "", annee: 1, boursier: false };
   const [f, setF] = useState(vide);
   const [formations, setFormations] = useState([]);
+  const [erreurs, setErreurs] = useState({});
+  const [soumis, setSoumis] = useState(false);
   const toast = useToast();
 
   useEffect(() => { api.individus("Formation").then(setFormations); }, []);
-  const champ = (k) => ({ value: f[k], onChange: (e) => setF({ ...f, [k]: e.target.value }) });
 
   // Identifiant sans accent ni espace, construit à partir du prénom et du nom : « Rim Saïdi » -> Rim_Saidi
-  const identifiant = `${f.prenom}_${f.nom}`
+  const matriculeSaisi = `${f.prenom}_${f.nom}`
     .normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9_]/g, "");
+
+  function regles(donnees) {
+    const id = `${donnees.prenom}_${donnees.nom}`
+      .normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9_]/g, "");
+    return {
+      prenom: nomPersonne(donnees.prenom, "prénom"),
+      nom: nomPersonne(donnees.nom, "nom"),
+      email: emailOptionnel(donnees.email),
+      formation: choix(donnees.formation, formations.map((x) => x.individu), "La formation"),
+      annee: entier(donnees.annee, { min: 1, max: 5, libelle: "L'année" }),
+      id: donnees.prenom.trim() && donnees.nom.trim() ? identifiant(id) : "",
+    };
+  }
+
+  function maj(k, valeur) {
+    const suivant = { ...f, [k]: valeur };
+    setF(suivant);
+    if (soumis) setErreurs(regles(suivant));
+  }
 
   async function envoyer(e) {
     e.preventDefault();
+    const eurs = regles(f);
+    setErreurs(eurs);
+    setSoumis(true);
+    if (invalide(eurs)) return;
     try {
       const r = await api.post("/api/m1/etudiants", {
-        ...f, id: identifiant, annee: Number(f.annee), email: f.email || null,
+        ...f, id: matriculeSaisi, prenom: f.prenom.trim(), nom: f.nom.trim(),
+        annee: Number(f.annee), email: f.email.trim() || null,
       });
       toast.succes(`${r.cree} inscrit (matricule ${r.matricule})`);
       setF(vide);
+      setErreurs({});
+      setSoumis(false);
       onCree();
     } catch (err) {
       toast.erreur(err.message);
@@ -126,28 +155,37 @@ function Inscription({ onCree }) {
   }
 
   return (
-    <form className="card" onSubmit={envoyer}>
+    <form className="card" onSubmit={envoyer} noValidate>
       <h4><UserPlus size={16} style={{ verticalAlign: "-3px" }} /> Inscrire un étudiant</h4>
       <div className="row">
-        <label>Prénom<input required {...champ("prenom")} /></label>
-        <label>Nom<input required {...champ("nom")} /></label>
+        <Champ label="Prénom" erreur={erreurs.prenom}>
+          <input value={f.prenom} onChange={(e) => maj("prenom", e.target.value)} aria-invalid={!!erreurs.prenom} />
+        </Champ>
+        <Champ label="Nom" erreur={erreurs.nom}>
+          <input value={f.nom} onChange={(e) => maj("nom", e.target.value)} aria-invalid={!!erreurs.nom} />
+        </Champ>
       </div>
       <div className="row">
-        <label>Formation
-          <select required {...champ("formation")}>
+        <Champ label="Formation" erreur={erreurs.formation}>
+          <select value={f.formation} onChange={(e) => maj("formation", e.target.value)} aria-invalid={!!erreurs.formation}>
             <option value="">—</option>
             {formations.map((x) => <option key={x.individu}>{x.individu}</option>)}
           </select>
-        </label>
-        <label>Année<input type="number" min="1" max="5" {...champ("annee")} /></label>
+        </Champ>
+        <Champ label="Année" erreur={erreurs.annee} aide="Entre 1 et 5">
+          <input type="number" min="1" max="5" value={f.annee} onChange={(e) => maj("annee", e.target.value)} aria-invalid={!!erreurs.annee} />
+        </Champ>
         <label className="case">
           <input type="checkbox" checked={f.boursier} onChange={(e) => setF({ ...f, boursier: e.target.checked })} />
           Boursier
         </label>
       </div>
-      <label>Email (optionnel)<input type="email" {...champ("email")} /></label>
-      <button className="primary" type="submit" disabled={!identifiant || identifiant === "_"}>
-        <UserPlus size={16} /> Inscrire {identifiant !== "_" ? identifiant : ""}
+      <Champ label="Email (optionnel)" erreur={erreurs.email}>
+        <input type="email" value={f.email} onChange={(e) => maj("email", e.target.value)} placeholder="prenom.nom@esprit.tn" aria-invalid={!!erreurs.email} />
+      </Champ>
+      {erreurs.id && <p className="error" role="alert">{erreurs.id}</p>}
+      <button className="primary" type="submit" disabled={!matriculeSaisi || matriculeSaisi === "_"}>
+        <UserPlus size={16} /> Inscrire {matriculeSaisi !== "_" ? matriculeSaisi : ""}
       </button>
       <p className="muted">INSERT DATA : l'étudiant + inscritA (formation) + matricule et date générés</p>
     </form>

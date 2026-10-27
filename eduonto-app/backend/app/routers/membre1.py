@@ -18,6 +18,7 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from ..saisie import verifier_attribut
 from ..store import check_id, select, update
 
 router = APIRouter(prefix="/api/m1", tags=["Membre 1 · Personne + Formation"])
@@ -38,6 +39,8 @@ def echapper(texte: str) -> str:
 @router.get("/etudiants")
 def etudiants(annee: int | None = None):
     """Étudiants, avec un filtre optionnel sur l'année d'étude."""
+    if annee is not None:
+        verifier_attribut("anneeEtude", annee)
     filtre = f"FILTER(?annee = {int(annee)})" if annee is not None else ""
     return select(f"""
         SELECT ?etudiant ?prenom ?nom ?annee ?formation WHERE {{
@@ -174,6 +177,10 @@ class Inscription(BaseModel):
 @router.post("/etudiants", status_code=201)
 def inscrire(ins: Inscription):
     """Inscrit un nouvel étudiant dans une formation (une seule requête INSERT DATA)."""
+    verifier_attribut("prenom", ins.prenom)
+    verifier_attribut("nom", ins.nom)
+    verifier_attribut("email", ins.email)
+    verifier_attribut("anneeEtude", ins.annee)
     i, f = check_id(ins.id), check_id(ins.formation)
     if select(f"SELECT ?t WHERE {{ edu:{i} a ?t }} LIMIT 1"):
         raise HTTPException(400, f"L'identifiant {i} existe déjà")

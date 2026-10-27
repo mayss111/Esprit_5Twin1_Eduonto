@@ -16,6 +16,7 @@ from typing import Literal
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from ..saisie import verifier_attribut
 from ..store import check_id, select, term, update
 
 router = APIRouter(prefix="/api/m3", tags=["Membre 3 · Competence + Metier"])
@@ -154,6 +155,9 @@ class NouveauMetier(BaseModel):
 @router.post("/metiers", status_code=201)
 def creer_metier(m: NouveauMetier):
     """Crée un métier et ses compétences requises en une seule requête INSERT DATA."""
+    verifier_attribut("intituleMetier", m.intituleMetier)
+    verifier_attribut("codeISCO", m.codeISCO)
+    verifier_attribut("niveauEtudesRequis", m.niveauEtudesRequis)
     i, t = check_id(m.id), check_id(m.type)
     if t not in types_metier():
         raise HTTPException(400, f"{t} n'est pas une sous-classe de Metier")

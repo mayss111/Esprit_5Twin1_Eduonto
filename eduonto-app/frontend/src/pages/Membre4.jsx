@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { Award, BadgeCheck, ChartColumn, ClipboardCheck, Database, Gauge, Layers, PenLine, Search, TimerOff } from "lucide-react";
 import { api } from "../api.js";
+import Champ from "../components/Champ.jsx";
 import ClassePage from "../components/ClassePage.jsx";
 import QueryCard from "../components/QueryCard.jsx";
 import ResultTable from "../components/ResultTable.jsx";
 import Section from "../components/Section.jsx";
 import StatCard from "../components/StatCard.jsx";
 import { useToast } from "../components/Toast.jsx";
+import { choix, decimal, identifiant, invalide } from "../validation.js";
 
 // MEMBRE 4 — Evaluation + PreuveDeCompetence
 const CLASSES = ["Evaluation", "PreuveDeCompetence"];
@@ -104,6 +106,8 @@ function SaisieNote({ onCree }) {
   const [f, setF] = useState(vide);
   const [etudiants, setEtudiants] = useState([]);
   const [cours, setCours] = useState([]);
+  const [erreurs, setErreurs] = useState({});
+  const [soumis, setSoumis] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
@@ -111,15 +115,37 @@ function SaisieNote({ onCree }) {
     api.individus("Cours").then(setCours);
   }, []);
 
-  const champ = (k) => ({ value: f[k], onChange: (e) => setF({ ...f, [k]: e.target.value }) });
+  function regles(donnees) {
+    return {
+      etudiant: choix(donnees.etudiant, etudiants.map((x) => x.individu), "L'étudiant"),
+      cours: choix(donnees.cours, cours.map((x) => x.individu), "Le cours"),
+      type: choix(donnees.type, TYPES, "Le type"),
+      note: decimal(donnees.note, { min: 0, max: 20, libelle: "La note" }),
+      coefficient: decimal(donnees.coefficient, { minExclusif: 0, libelle: "Le coefficient" }),
+      session: choix(donnees.session, ["Principale", "Rattrapage"], "La session"),
+      id: identifiant(donnees.id, { obligatoire: false }),
+    };
+  }
+
+  function maj(k, valeur) {
+    const suivant = { ...f, [k]: valeur };
+    setF(suivant);
+    if (soumis) setErreurs(regles(suivant));
+  }
 
   async function envoyer(e) {
     e.preventDefault();
+    const eurs = regles(f);
+    setErreurs(eurs);
+    setSoumis(true);
+    if (invalide(eurs)) return;
     try {
-      const id = f.id || `${f.type}_${f.cours}_${f.etudiant}`;
+      const id = f.id.trim() || `${f.type}_${f.cours}_${f.etudiant}`;
       await api.post("/api/m4/evaluations", { ...f, id, note: Number(f.note), coefficient: Number(f.coefficient) });
       toast.succes(`${id} enregistrée`);
       setF(vide);
+      setErreurs({});
+      setSoumis(false);
       onCree();
     } catch (err) {
       toast.erreur(err.message);
@@ -127,33 +153,39 @@ function SaisieNote({ onCree }) {
   }
 
   return (
-    <form className="card" onSubmit={envoyer}>
+    <form className="card" onSubmit={envoyer} noValidate>
       <h4><PenLine size={16} style={{ verticalAlign: "-3px" }} /> Saisir une note</h4>
       <div className="row">
-        <label>Étudiant
-          <select required {...champ("etudiant")}>
+        <Champ label="Étudiant" erreur={erreurs.etudiant}>
+          <select value={f.etudiant} onChange={(e) => maj("etudiant", e.target.value)} aria-invalid={!!erreurs.etudiant}>
             <option value="">—</option>
             {etudiants.map((x) => <option key={x.individu}>{x.individu}</option>)}
           </select>
-        </label>
-        <label>Cours
-          <select required {...champ("cours")}>
+        </Champ>
+        <Champ label="Cours" erreur={erreurs.cours}>
+          <select value={f.cours} onChange={(e) => maj("cours", e.target.value)} aria-invalid={!!erreurs.cours}>
             <option value="">—</option>
             {cours.map((x) => <option key={x.individu}>{x.individu}</option>)}
           </select>
-        </label>
-        <label>Type
-          <select {...champ("type")}>{TYPES.map((t) => <option key={t}>{t}</option>)}</select>
-        </label>
+        </Champ>
+        <Champ label="Type" erreur={erreurs.type}>
+          <select value={f.type} onChange={(e) => maj("type", e.target.value)}>{TYPES.map((t) => <option key={t}>{t}</option>)}</select>
+        </Champ>
       </div>
       <div className="row">
-        <label>Note /20<input required type="number" min="0" max="20" step="0.25" {...champ("note")} /></label>
-        <label>Coefficient<input type="number" min="0.5" step="0.5" {...champ("coefficient")} /></label>
-        <label>Session
-          <select {...champ("session")}><option>Principale</option><option>Rattrapage</option></select>
-        </label>
+        <Champ label="Note /20" erreur={erreurs.note} aide="Entre 0 et 20">
+          <input type="number" min="0" max="20" step="0.25" value={f.note} onChange={(e) => maj("note", e.target.value)} aria-invalid={!!erreurs.note} />
+        </Champ>
+        <Champ label="Coefficient" erreur={erreurs.coefficient} aide="Strictement positif">
+          <input type="number" min="0.5" step="0.5" value={f.coefficient} onChange={(e) => maj("coefficient", e.target.value)} aria-invalid={!!erreurs.coefficient} />
+        </Champ>
+        <Champ label="Session" erreur={erreurs.session}>
+          <select value={f.session} onChange={(e) => maj("session", e.target.value)}><option>Principale</option><option>Rattrapage</option></select>
+        </Champ>
       </div>
-      <label>Identifiant (optionnel)<input placeholder="généré automatiquement" {...champ("id")} /></label>
+      <Champ label="Identifiant (optionnel)" erreur={erreurs.id} aide="Lettres, chiffres et _">
+        <input placeholder="généré automatiquement" value={f.id} onChange={(e) => maj("id", e.target.value)} aria-invalid={!!erreurs.id} />
+      </Champ>
       <button className="primary" type="submit">Enregistrer</button>
       <p className="muted">INSERT DATA : l'évaluation + aPasse (étudiant) + estEvaluePar (cours)</p>
     </form>

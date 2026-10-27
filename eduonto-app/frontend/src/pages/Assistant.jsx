@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Bot, BookOpen, Briefcase, ChevronRight, ClipboardCheck, MessageSquarePlus, Send, Sparkles, UserRound, Users,
+  Bot, BookOpen, Briefcase, ChevronRight, ClipboardCheck, Library, MessageSquarePlus, Send, Sparkles, UserRound, Users,
 } from "lucide-react";
 import { api } from "../api.js";
 import EmptyState from "../components/EmptyState.jsx";
@@ -24,7 +24,6 @@ const SUGGESTIONS = [
     "Ahmed peut-il suivre Angular ?",                                      // M2
     "Que puis-je suivre après JavaScript ?",                               // M2
     "Qui enseigne Angulr ?",                                               // faute de frappe (rapidfuzz)
-    "Quels agents IA sont fiables ?",                                      // M5
     "Liste les cours",                                                     // commun
   ] },
   { theme: "Compétences & métiers", icone: Briefcase, questions: [
@@ -33,6 +32,15 @@ const SUGGESTIONS = [
     "Quels métiers sont accessibles avec un master ?",                     // M3
     "Combien de compétences demande chaque métier ?",                      // M3
     "Quels sont les métiers en tension ?",                                 // M3
+  ] },
+  { theme: "Ressources & agents", icone: Library, questions: [
+    "Quels agents IA sont fiables ?",                                      // M5
+    "Que recommande-t-on à Omar ?",                                        // M5
+    "Quelles ressources sont en libre accès ?",                            // M5
+    "Quelles ressources en français sont en libre accès ?",                // M5
+    "Quelles ressources utilise le cours Angular ?",                       // M5
+    "Ressources de moins de 30 minutes",                                   // M5
+    "Quelles ressources du parcours d'Ahmed ?",                            // M5
   ] },
   { theme: "Évaluations", icone: ClipboardCheck, questions: [
     "Quelles évaluations ont une note inférieure à 10 ?",                  // M4 (opérateur de comparaison)

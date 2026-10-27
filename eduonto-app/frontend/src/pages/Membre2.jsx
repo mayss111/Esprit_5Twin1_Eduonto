@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { BookOpen, CircleCheck, CircleX, Database, FolderTree, GitBranch, Hash, Layers, Library, Plus, TrendingUp } from "lucide-react";
 import { api } from "../api.js";
+import Champ from "../components/Champ.jsx";
 import ClassePage from "../components/ClassePage.jsx";
 import QueryCard from "../components/QueryCard.jsx";
 import Section from "../components/Section.jsx";
 import StatCard from "../components/StatCard.jsx";
 import { useToast } from "../components/Toast.jsx";
+import { choix, codeCours, entier, identifiant, invalide, texteLibre } from "../validation.js";
 
 // MEMBRE 2 — Cours + Domaine
 const CLASSES = ["Cours", "Domaine"];
@@ -193,23 +195,50 @@ function NouveauCours({ onCree }) {
   const [f, setF] = useState(vide);
   const [domaines, setDomaines] = useState([]);
   const [cours, setCours] = useState([]);
+  const [erreurs, setErreurs] = useState({});
+  const [soumis, setSoumis] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
     api.individus("Domaine").then(setDomaines);
     api.individus("Cours").then(setCours);
   }, []);
-  const champ = (k) => ({ value: f[k], onChange: (e) => setF({ ...f, [k]: e.target.value }) });
+
+  function regles(donnees) {
+    const propre = identifiant(donnees.id);
+    return {
+      id: propre || (donnees.prerequis.includes(donnees.id.trim()) ? "Un cours ne peut pas être son propre prérequis." : ""),
+      intitule: texteLibre(donnees.intitule, { libelle: "L'intitulé" }),
+      code: codeCours(donnees.code),
+      domaine: choix(donnees.domaine, domaines.map((x) => x.individu), "Le domaine"),
+      niveau: choix(donnees.niveau, NIVEAUX, "Le niveau"),
+      credits: entier(donnees.credits, { min: 1, max: 10, libelle: "Les crédits" }),
+      volumeHoraire: entier(donnees.volumeHoraire, { min: 1, libelle: "Le volume horaire" }),
+      semestre: entier(donnees.semestre, { min: 1, max: 10, libelle: "Le semestre" }),
+    };
+  }
+
+  function maj(k, valeur) {
+    const suivant = { ...f, [k]: valeur };
+    setF(suivant);
+    if (soumis) setErreurs(regles(suivant));
+  }
 
   async function envoyer(e) {
     e.preventDefault();
+    const eurs = regles(f);
+    setErreurs(eurs);
+    setSoumis(true);
+    if (invalide(eurs)) return;
     try {
       await api.post("/api/m2/cours", {
-        ...f, code: f.code || null,
+        ...f, id: f.id.trim(), intitule: f.intitule.trim(), code: f.code.trim() || null,
         credits: Number(f.credits), volumeHoraire: Number(f.volumeHoraire), semestre: Number(f.semestre),
       });
       toast.succes(`${f.id} créé`);
       setF(vide);
+      setErreurs({});
+      setSoumis(false);
       onCree();
       api.individus("Cours").then(setCours);
     } catch (err) {
@@ -218,27 +247,41 @@ function NouveauCours({ onCree }) {
   }
 
   return (
-    <form className="card" onSubmit={envoyer}>
+    <form className="card" onSubmit={envoyer} noValidate>
       <h4><Plus size={16} style={{ verticalAlign: "-3px" }} /> Créer un cours</h4>
       <div className="row">
-        <label>Identifiant<input required placeholder="ex. React" {...champ("id")} /></label>
-        <label>Intitulé<input required {...champ("intitule")} /></label>
-        <label>Code<input placeholder="WEB302" {...champ("code")} /></label>
+        <Champ label="Identifiant" erreur={erreurs.id} aide="Sans espace ni accent">
+          <input placeholder="ex. React" value={f.id} onChange={(e) => maj("id", e.target.value)} aria-invalid={!!erreurs.id} />
+        </Champ>
+        <Champ label="Intitulé" erreur={erreurs.intitule}>
+          <input value={f.intitule} onChange={(e) => maj("intitule", e.target.value)} aria-invalid={!!erreurs.intitule} />
+        </Champ>
+        <Champ label="Code" erreur={erreurs.code} aide="Optionnel, ex. WEB302">
+          <input placeholder="WEB302" value={f.code} onChange={(e) => maj("code", e.target.value)} aria-invalid={!!erreurs.code} />
+        </Champ>
       </div>
       <div className="row">
-        <label>Type<select {...champ("type")}>{TYPES.map((t) => <option key={t}>{t}</option>)}</select></label>
-        <label>Domaine
-          <select required {...champ("domaine")}>
+        <label>Type<select value={f.type} onChange={(e) => maj("type", e.target.value)}>{TYPES.map((t) => <option key={t}>{t}</option>)}</select></label>
+        <Champ label="Domaine" erreur={erreurs.domaine}>
+          <select value={f.domaine} onChange={(e) => maj("domaine", e.target.value)} aria-invalid={!!erreurs.domaine}>
             <option value="">—</option>
             {domaines.map((x) => <option key={x.individu}>{x.individu}</option>)}
           </select>
-        </label>
-        <label>Niveau<select {...champ("niveau")}>{NIVEAUX.map((n) => <option key={n}>{n}</option>)}</select></label>
+        </Champ>
+        <Champ label="Niveau" erreur={erreurs.niveau}>
+          <select value={f.niveau} onChange={(e) => maj("niveau", e.target.value)}>{NIVEAUX.map((n) => <option key={n}>{n}</option>)}</select>
+        </Champ>
       </div>
       <div className="row">
-        <label>Crédits<input type="number" min="1" max="10" {...champ("credits")} /></label>
-        <label>Heures<input type="number" min="1" {...champ("volumeHoraire")} /></label>
-        <label>Semestre<input type="number" min="1" max="10" {...champ("semestre")} /></label>
+        <Champ label="Crédits" erreur={erreurs.credits} aide="De 1 à 10">
+          <input type="number" min="1" max="10" value={f.credits} onChange={(e) => maj("credits", e.target.value)} aria-invalid={!!erreurs.credits} />
+        </Champ>
+        <Champ label="Heures" erreur={erreurs.volumeHoraire} aide="Au moins 1">
+          <input type="number" min="1" value={f.volumeHoraire} onChange={(e) => maj("volumeHoraire", e.target.value)} aria-invalid={!!erreurs.volumeHoraire} />
+        </Champ>
+        <Champ label="Semestre" erreur={erreurs.semestre} aide="De 1 à 10">
+          <input type="number" min="1" max="10" value={f.semestre} onChange={(e) => maj("semestre", e.target.value)} aria-invalid={!!erreurs.semestre} />
+        </Champ>
       </div>
       <label>Prérequis (Ctrl + clic pour en choisir plusieurs)
         <select multiple size={4} value={f.prerequis}
@@ -262,6 +305,10 @@ function AjoutPrerequis({ version, onChange }) {
   useEffect(() => { api.individus("Cours").then(setCours); }, [version]);
 
   async function ajouter() {
+    if (c === p) {
+      toast.erreur("Un cours ne peut pas être son propre prérequis.");
+      return;
+    }
     try {
       await api.put(`/api/m2/cours/${c}/prerequis`, { prerequis: p });
       toast.succes(`${p} est maintenant un prérequis de ${c}`);

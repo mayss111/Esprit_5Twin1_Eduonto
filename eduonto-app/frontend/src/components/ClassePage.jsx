@@ -5,6 +5,7 @@ import EmptyState from "./EmptyState.jsx";
 import Modal from "./Modal.jsx";
 import Skeleton from "./Skeleton.jsx";
 import { useToast } from "./Toast.jsx";
+import { controlerAttribut, identifiant, invalide, relations } from "../validation.js";
 
 /**
  * CRUD complet pour une grande classe de l'ontologie (et ses sous-classes) :
@@ -170,6 +171,27 @@ function FicheLigne({ p, deduit }) {
   );
 }
 
+function aideAttribut(nom) {
+  const aides = {
+    email: "ex. prenom.nom@esprit.tn",
+    anneeEtude: "entier de 1 à 5",
+    nbCredits: "entier de 1 à 10",
+    volumeHoraire: "entier ≥ 1",
+    semestre: "entier de 1 à 10",
+    note: "de 0 à 20",
+    coefficient: "strictement positif",
+    tauxPrecision: "de 0 à 1",
+    valeur: "de 0 à 1",
+    seuilAlerte: "de 0 à 1",
+    codeISCO: "4 chiffres",
+    codeCours: "ex. WEB302",
+    url: "https://…",
+    telephone: "8 à 15 chiffres",
+    dureeMinutes: "entier ≥ 0",
+  };
+  return aides[nom] || "";
+}
+
 function Formulaire({ classe, individu, onDone, onCancel }) {
   const [proprietes, setProprietes] = useState([]);
   const [sousClasses, setSousClasses] = useState([]);
@@ -177,6 +199,8 @@ function Formulaire({ classe, individu, onDone, onCancel }) {
   const [type, setType] = useState(classe);
   const [valeurs, setValeurs] = useState({});
   const [erreur, setErreur] = useState("");
+  const [erreurs, setErreurs] = useState({});
+  const [soumis, setSoumis] = useState(false);
 
   // Valeurs actuelles en mode modification
   useEffect(() => {
@@ -203,9 +227,33 @@ function Formulaire({ classe, individu, onDone, onCancel }) {
     });
   }, [type, individu]);
 
+  function controler(idSaisi, vals) {
+    const eurs = {};
+    if (!individu) {
+      const eId = identifiant(idSaisi);
+      if (eId) eurs.id = eId;
+    }
+    for (const p of proprietes) {
+      const v = vals[p.propriete] ?? "";
+      const msg = p.genre === "relation" ? relations(v) : controlerAttribut(p.propriete, v);
+      if (msg) eurs[p.propriete] = msg;
+    }
+    return eurs;
+  }
+
+  function majValeur(nom, valeur) {
+    const suivant = { ...valeurs, [nom]: valeur };
+    setValeurs(suivant);
+    if (soumis) setErreurs(controler(id, suivant));
+  }
+
   async function envoyer(e) {
     e.preventDefault();
     setErreur("");
+    const eurs = controler(id, valeurs);
+    setErreurs(eurs);
+    setSoumis(true);
+    if (invalide(eurs)) return;
     const props = {};
     for (const p of proprietes) {
       const v = (valeurs[p.propriete] ?? "").trim();
@@ -218,7 +266,7 @@ function Formulaire({ classe, individu, onDone, onCancel }) {
         await api.modifier(individu.id, props);
         onDone(`${individu.id} modifié`);
       } else {
-        await api.creer(id, type, props);
+        await api.creer(id.trim(), type, props);
         onDone(`${id} créé`);
       }
     } catch (err) {
@@ -227,7 +275,7 @@ function Formulaire({ classe, individu, onDone, onCancel }) {
   }
 
   return (
-    <form className="card cp-panneau" onSubmit={envoyer}>
+    <form className="card cp-panneau" onSubmit={envoyer} noValidate>
       <div className="cp-panneau-entete">
         <h4>{individu ? `Modifier ${individu.id}` : `Nouvel individu de ${classe}`}</h4>
         <button type="button" className="icone-btn" aria-label="Fermer le formulaire" onClick={onCancel}><X size={16} /></button>
@@ -235,8 +283,10 @@ function Formulaire({ classe, individu, onDone, onCancel }) {
       <div className="form-grille">
         {!individu && (
           <>
-            <label>Identifiant (sans espace ni accent)
-              <input required value={id} onChange={(e) => setId(e.target.value)} placeholder="ex. Rim_Saidi" />
+            <label className={erreurs.id ? "invalide" : ""}>Identifiant (sans espace ni accent)
+              <input value={id} onChange={(e) => { setId(e.target.value); if (soumis) setErreurs(controler(e.target.value, valeurs)); }}
+                     placeholder="ex. Rim_Saidi" aria-invalid={!!erreurs.id} />
+              {erreurs.id && <span className="champ-erreur" role="alert">{erreurs.id}</span>}
             </label>
             <label>Classe
               <select value={type} onChange={(e) => setType(e.target.value)}>
@@ -247,13 +297,15 @@ function Formulaire({ classe, individu, onDone, onCancel }) {
           </>
         )}
         {proprietes.map((p) => (
-          <label key={p.propriete}>
+          <label key={p.propriete} className={erreurs[p.propriete] ? "invalide" : ""}>
             <span>{p.propriete} <span className="muted">({p.genre})</span></span>
             <input
               value={valeurs[p.propriete] ?? ""}
-              onChange={(e) => setValeurs({ ...valeurs, [p.propriete]: e.target.value })}
-              placeholder={p.genre === "relation" ? "identifiant(s), séparés par des virgules" : ""}
+              onChange={(e) => majValeur(p.propriete, e.target.value)}
+              placeholder={p.genre === "relation" ? "identifiant(s), séparés par des virgules" : aideAttribut(p.propriete)}
+              aria-invalid={!!erreurs[p.propriete]}
             />
+            {erreurs[p.propriete] && <span className="champ-erreur" role="alert">{erreurs[p.propriete]}</span>}
           </label>
         ))}
       </div>

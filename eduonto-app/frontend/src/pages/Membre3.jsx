@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { ChartColumn, Briefcase, Database, Flame, Layers, Lightbulb, Pencil, Plus, Target, Users } from "lucide-react";
 import { api } from "../api.js";
+import Champ from "../components/Champ.jsx";
 import ClassePage from "../components/ClassePage.jsx";
 import QueryCard from "../components/QueryCard.jsx";
 import Membre3Insights from "../components/Membre3Insights.jsx";
 import Section from "../components/Section.jsx";
 import StatCard from "../components/StatCard.jsx";
 import { useToast } from "../components/Toast.jsx";
+import { choix, codeIsco, identifiant, invalide, texteLibre } from "../validation.js";
 
 // MEMBRE 3 — Competence + Metier
 const CLASSES = ["Competence", "Metier"];
@@ -111,6 +113,8 @@ function CreationMetier({ onChange, version }) {
   const [form, setForm] = useState(vide);
   const [types, setTypes] = useState([]);
   const [competences, setCompetences] = useState([]);
+  const [erreurs, setErreurs] = useState({});
+  const [soumis, setSoumis] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
@@ -123,37 +127,67 @@ function CreationMetier({ onChange, version }) {
     api.individus("Competence").then((r) => setCompetences(r.map((x) => x.individu))).catch((e) => toast.erreur(e.message));
   }, [version]);
 
+  function regles(donnees) {
+    return {
+      id: identifiant(donnees.id),
+      type: choix(donnees.type, types, "Le type"),
+      intituleMetier: texteLibre(donnees.intituleMetier, { libelle: "L'intitulé" }),
+      codeISCO: codeIsco(donnees.codeISCO),
+      niveauEtudesRequis: choix(donnees.niveauEtudesRequis, NIVEAUX, "Le niveau d'études"),
+    };
+  }
+
+  function majValeur(k, valeur) {
+    const suivant = { ...form, [k]: valeur };
+    setForm(suivant);
+    if (soumis) setErreurs(regles(suivant));
+  }
+
   async function creer(e) {
     e.preventDefault();
+    const eurs = regles(form);
+    setErreurs(eurs);
+    setSoumis(true);
+    if (invalide(eurs)) return;
     try {
-      const r = await api.post("/api/m3/metiers", { ...form, codeISCO: form.codeISCO || null });
+      const r = await api.post("/api/m3/metiers", {
+        ...form, id: form.id.trim(), intituleMetier: form.intituleMetier.trim(),
+        codeISCO: form.codeISCO.trim() || null,
+      });
       toast.succes(`Métier ${r.cree} créé (${r.competences.length} compétence(s) requise(s)).`);
       setForm({ ...vide, type: form.type });
+      setErreurs({});
+      setSoumis(false);
       onChange();
     } catch (err) {
       toast.erreur(err.message);
     }
   }
 
-  const maj = (k) => (e) => setForm({ ...form, [k]: e.target.value });
   return (
-    <form className="card" onSubmit={creer}>
+    <form className="card" onSubmit={creer} noValidate>
       <h4><Plus size={16} style={{ verticalAlign: "-3px" }} /> Créer un métier</h4>
       <code className="url">POST /api/m3/metiers</code>
       <div className="form-grille">
-        <label>Identifiant<input value={form.id} onChange={maj("id")} placeholder="IngenieurCloud" required /></label>
-        <label>Type
-          <select value={form.type} onChange={maj("type")}>
+        <Champ label="Identifiant" erreur={erreurs.id} aide="Sans espace ni accent">
+          <input value={form.id} onChange={(e) => majValeur("id", e.target.value)} placeholder="IngenieurCloud" aria-invalid={!!erreurs.id} />
+        </Champ>
+        <Champ label="Type" erreur={erreurs.type}>
+          <select value={form.type} onChange={(e) => majValeur("type", e.target.value)} aria-invalid={!!erreurs.type}>
             {types.map((t) => <option key={t}>{t}</option>)}
           </select>
-        </label>
-        <label>Intitulé<input value={form.intituleMetier} onChange={maj("intituleMetier")} placeholder="Ingénieur cloud" required /></label>
-        <label>Code ISCO<input value={form.codeISCO} onChange={maj("codeISCO")} placeholder="2523" /></label>
-        <label>Niveau d'études
-          <select value={form.niveauEtudesRequis} onChange={maj("niveauEtudesRequis")}>
+        </Champ>
+        <Champ label="Intitulé" erreur={erreurs.intituleMetier}>
+          <input value={form.intituleMetier} onChange={(e) => majValeur("intituleMetier", e.target.value)} placeholder="Ingénieur cloud" aria-invalid={!!erreurs.intituleMetier} />
+        </Champ>
+        <Champ label="Code ISCO" erreur={erreurs.codeISCO} aide="Optionnel, 4 chiffres">
+          <input value={form.codeISCO} onChange={(e) => majValeur("codeISCO", e.target.value)} placeholder="2523" inputMode="numeric" aria-invalid={!!erreurs.codeISCO} />
+        </Champ>
+        <Champ label="Niveau d'études" erreur={erreurs.niveauEtudesRequis}>
+          <select value={form.niveauEtudesRequis} onChange={(e) => majValeur("niveauEtudesRequis", e.target.value)}>
             {NIVEAUX.map((n) => <option key={n}>{n}</option>)}
           </select>
-        </label>
+        </Champ>
         <label className="case" style={{ alignSelf: "end", marginBottom: 20 }}>
           <input type="checkbox" checked={form.estEnTension}
                  onChange={(e) => setForm({ ...form, estEnTension: e.target.checked })} />
@@ -188,6 +222,10 @@ function CompetenceMetier({ onChange, version }) {
 
   async function envoyer(e) {
     e.preventDefault();
+    if (!form.metier || !form.competence) {
+      toast.erreur("Choisissez un métier et une compétence.");
+      return;
+    }
     try {
       const r = await api.put(`/api/m3/metiers/${form.metier}/competences`,
                               { competence: form.competence, action: form.action });

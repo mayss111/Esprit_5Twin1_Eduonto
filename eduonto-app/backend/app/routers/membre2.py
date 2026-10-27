@@ -16,6 +16,7 @@ Requêtes SPARQL de ce membre (CRUD, filtres, recherche, agrégats, chemins de p
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from ..saisie import verifier_attribut
 from ..store import check_id, select, update
 
 router = APIRouter(prefix="/api/m2", tags=["Membre 2 · Cours + Domaine"])
@@ -184,6 +185,12 @@ class NouveauCours(BaseModel):
 def creer_cours(c: NouveauCours):
     """Crée un cours, le relie à son domaine et à ses prérequis. Les deux sens de la relation
     de prérequis sont écrits (aPourPrerequis et son inverse estPrerequisDe)."""
+    verifier_attribut("intitule", c.intitule)
+    verifier_attribut("codeCours", c.code)
+    verifier_attribut("nbCredits", c.credits)
+    verifier_attribut("volumeHoraire", c.volumeHoraire)
+    verifier_attribut("semestre", c.semestre)
+    verifier_attribut("niveau", c.niveau)
     i, d = check_id(c.id), check_id(c.domaine)
     if c.type not in TYPES_COURS:
         raise HTTPException(400, f"Type inconnu : choisir parmi {TYPES_COURS}")

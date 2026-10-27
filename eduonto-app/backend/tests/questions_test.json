@@ -73,5 +73,12 @@
   {"question": "Qui suit le tronc commun ?", "intention": "etudiants_formation", "parametres": {"formation": "Ingenieur_TroncCommun"}, "categorie": "alias"},
   {"question": "Combien d'inscrits compte le tronc commun ?", "intention": "nb_etudiants_formation", "parametres": {"formation": "Ingenieur_TroncCommun"}, "categorie": "agregat"},
   {"question": "Quel est le nombre d'étudiants en data science ?", "intention": "nb_etudiants_formation", "parametres": {"formation": "Ingenieur_DataScience"}, "categorie": "agregat"},
-  {"question": "Quels étudiants sont en licence génie logiciel ?", "intention": "etudiants_formation", "parametres": {"formation": "Licence_GenieLogiciel"}, "categorie": "alias"}
+  {"question": "Quels étudiants sont en licence génie logiciel ?", "intention": "etudiants_formation", "parametres": {"formation": "Licence_GenieLogiciel"}, "categorie": "alias"},
+  {"question": "Quels agents IA sont fiables ?", "intention": "agents_fiables", "parametres": {}, "categorie": "simple"},
+  {"question": "Que recommande-t-on à Omar ?", "intention": "recommandations_etudiant", "parametres": {"etudiant": "Omar"}, "categorie": "simple"},
+  {"question": "Quelles ressources sont en libre accès ?", "intention": "ressources_libres", "parametres": {}, "categorie": "simple"},
+  {"question": "Quelles ressources en français sont en libre accès ?", "intention": "ressources_libres_langue", "parametres": {"langue": "français"}, "categorie": "enumeration"},
+  {"question": "Quelles ressources utilise le cours Angular ?", "intention": "ressources_cours", "parametres": {"cours": "Angular"}, "categorie": "simple"},
+  {"question": "Ressources de moins de 30 minutes", "intention": "ressources_courtes", "parametres": {"n": 30, "op": "<"}, "categorie": "comparaison"},
+  {"question": "Quelles ressources du parcours d'Ahmed ?", "intention": "ressources_parcours_etudiant", "parametres": {"etudiant": "Ahmed"}, "categorie": "simple"}
 ]

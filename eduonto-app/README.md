@@ -114,11 +114,11 @@ Pour chaque membre, **2 requêtes et 2 intentions sont déjà faites en exemple*
 - [ ] Individus : au moins 2 nouveaux
 
 ### Membre 5 — RessourcePedagogique + AgentPedagogiqueIA
-- [ ] SPARQL : ressources en libre accès d'une langue donnée
-- [ ] SPARQL : ressources utilisées par un cours
-- [ ] SPARQL : ressources de moins de N minutes
-- [ ] NLP : « Ressources en libre accès », « Ressources du cours X »
-- [ ] Individus : au moins 2 nouveaux
+- [x] SPARQL : ressources en libre accès d'une langue donnée
+- [x] SPARQL : ressources utilisées par un cours
+- [x] SPARQL : ressources de moins de N minutes
+- [x] NLP : « Ressources en libre accès », « Ressources du cours X »
+- [x] Individus : au moins 2 nouveaux
 
 ### Membre 6 — ParcoursApprentissage + IndicateurApprentissage
 - [ ] SPARQL : tous les indicateurs d'un étudiant

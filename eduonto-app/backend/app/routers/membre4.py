@@ -18,6 +18,7 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from ..saisie import verifier_attribut
 from ..store import check_id, select, update
 
 
@@ -37,6 +38,8 @@ TYPES_EVALUATION = ("QCM", "DevoirSurveille", "MiniProjet", "ExposeOral", "Exame
 @router.get("/evaluations")
 def evaluations(noteMin: float | None = None):
     """Évaluations triées par note, avec un seuil minimal optionnel."""
+    if noteMin is not None:
+        verifier_attribut("note", noteMin)
     filtre = f"FILTER(?note >= {float(noteMin)})" if noteMin is not None else ""
     return select(f"""
         SELECT ?evaluation ?note ?session ?cours ?etudiant WHERE {{
@@ -185,6 +188,9 @@ class NouvelleEvaluation(BaseModel):
 @router.post("/evaluations", status_code=201)
 def creer_evaluation(ev: NouvelleEvaluation):
     """Crée une évaluation et la relie à l'étudiant (aPasse) et au cours (estEvaluePar), en une seule requête."""
+    verifier_attribut("note", ev.note)
+    verifier_attribut("coefficient", ev.coefficient)
+    verifier_attribut("session", ev.session)
     i, etu, cours = check_id(ev.id), check_id(ev.etudiant), check_id(ev.cours)
     if ev.type not in TYPES_EVALUATION:
         raise HTTPException(400, f"Type inconnu : choisir parmi {TYPES_EVALUATION}")

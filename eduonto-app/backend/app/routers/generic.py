@@ -6,7 +6,8 @@ ajouter ses requêtes spécifiques dans son propre fichier (membre1.py ...).
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from ..store import check_id, select, term, update
+from ..saisie import verifier_attribut
+from ..store import check_id, property_kind, select, term, update
 
 router = APIRouter(prefix="/api", tags=["CRUD générique"])
 
@@ -19,6 +20,15 @@ class Individu(BaseModel):
 
 class Modification(BaseModel):
     proprietes: dict              # propriétés à remplacer
+
+
+def verifier_valeur(prop: str, valeur):
+    """Identifiant pour une relation, contrainte d'ontologie pour un attribut."""
+    kind, _ = property_kind(prop)
+    if kind == "object":
+        check_id(str(valeur))
+    else:
+        verifier_attribut(prop, valeur)
 
 
 def safe(fn):
@@ -106,8 +116,10 @@ def creer(ind: Individu):
             raise ValueError(f"L'individu {i} existe déjà")
         triples = [f"edu:{i} a owl:NamedIndividual, edu:{c} ."]
         for p, v in ind.proprietes.items():
+            p = check_id(p)
             for val in (v if isinstance(v, list) else [v]):
-                triples.append(f"edu:{i} edu:{check_id(p)} {term(p, val)} .")
+                verifier_valeur(p, val)
+                triples.append(f"edu:{i} edu:{p} {term(p, val)} .")
         update("INSERT DATA {\n  " + "\n  ".join(triples) + "\n}")
         return {"cree": i}
     return safe(run)
@@ -122,6 +134,8 @@ def modifier(ident: str, modif: Modification):
         for p, v in modif.proprietes.items():
             p = check_id(p)
             vals = v if isinstance(v, list) else [v]
+            for val in vals:
+                verifier_valeur(p, val)
             ins = " ".join(f"edu:{i} edu:{p} {term(p, val)} ." for val in vals)
             update(f"""
                 DELETE {{ edu:{i} edu:{p} ?ancienne }}
