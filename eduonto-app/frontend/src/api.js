@@ -45,5 +45,6 @@ export const api = {
   supprimer: (id) => request("DELETE", `/api/individus/${id}`),
 
   // --- Module NLP (back-end : app/routers/nlp.py) ---
-  ask: (question) => request("POST", "/api/ask", { question }),
+  // contexte (optionnel) : le champ "contexte" de la réponse précédente, pour « et ses notes ? »
+  ask: (question, contexte) => request("POST", "/api/ask", contexte?.length ? { question, contexte } : { question }),
 };

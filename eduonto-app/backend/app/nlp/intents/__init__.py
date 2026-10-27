@@ -6,10 +6,14 @@ Format d'une intention :
       "membre": 2,
       "description": "les prérequis d'un cours",  # utilisé par le repli zero-shot
       "keywords": ["prerequis", "avant"],       # mots SANS accents, en minuscules
-      "slots": {"cours": "Cours"},              # trou -> classe attendue, "number" ou "CLASS"
+      "slots": {"cours": "Cours"},              # trou -> classe attendue, "number", "CLASS"
+                                                #   ou {"enum": ["Principale", "Rattrapage"]} (valeur citée dans la question)
+      "exemples": ["Quels sont les prérequis d'Angular ?", ...],  # optionnel : similarité sémantique
+      "op_defaut": ">=",                        # optionnel : opérateur si la question n'en exprime pas ({op})
       "template": "SELECT ... edu:{cours} ...", # requête SPARQL avec les trous entre {}
     }
 Dans les templates, doubler les accolades SPARQL : {{ et }}.
+Avec un slot "number", le trou {op} reçoit l'opérateur lu dans la question (« moins de » → "<").
 """
 from .commun import INTENTS as COMMUN
 from .membre1 import INTENTS as M1

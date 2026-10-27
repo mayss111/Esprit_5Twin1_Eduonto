@@ -5,3 +5,6 @@ spacy>=3.7
 owlready2>=0.46        # uniquement pour scripts/build_inferred.py (nécessite Java)
 # transformers>=4.40   # optionnel : repli zero-shot (EDUONTO_HF=1)
 # torch>=2.2           # optionnel : requis par transformers
+# rapidfuzz>=3.0              # optionnel : tolérance aux fautes de frappe (actif dès qu'il est installé)
+# sentence-transformers>=3.0  # optionnel : similarité sémantique (EDUONTO_EMB=1)
+# pytest>=8                   # tests : python -m pytest tests -q
