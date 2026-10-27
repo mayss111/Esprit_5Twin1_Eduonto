@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
+import { BookOpen, CircleCheck, CircleX, Database, FolderTree, GitBranch, Hash, Layers, Library, Plus, TrendingUp } from "lucide-react";
 import { api } from "../api.js";
 import ClassePage from "../components/ClassePage.jsx";
 import QueryCard from "../components/QueryCard.jsx";
+import Section from "../components/Section.jsx";
+import StatCard from "../components/StatCard.jsx";
+import { useToast } from "../components/Toast.jsx";
 
 // MEMBRE 2 — Cours + Domaine
 const CLASSES = ["Cours", "Domaine"];
@@ -15,30 +19,33 @@ export default function Membre2() {
 
   return (
     <div>
-      <h2>Membre 2 · Cours + Domaine</h2>
+      <ChiffresCles version={version} />
 
-      <h3>Parcours de prérequis</h3>
-      <div className="grid2">
-        <CheminPrerequis version={version} />
-        <PeutSuivre version={version} />
-      </div>
+      <Section icone={GitBranch} titre="Parcours de prérequis">
+        <div className="grid2" style={{ marginTop: 0 }}>
+          <CheminPrerequis version={version} />
+          <PeutSuivre version={version} />
+        </div>
+      </Section>
 
-      <h3>Catalogue</h3>
-      <div className="grid2">
-        <StatistiquesDomaines version={version} />
-        <NouveauCours onCree={rafraichir} />
-      </div>
-      <AjoutPrerequis version={version} onChange={rafraichir} />
+      <Section icone={Library} titre="Catalogue">
+        <div className="grid2" style={{ marginTop: 0, marginBottom: 16 }}>
+          <StatistiquesDomaines version={version} />
+          <NouveauCours onCree={rafraichir} />
+        </div>
+        <AjoutPrerequis version={version} onChange={rafraichir} />
+      </Section>
 
-      <h3>Gestion des individus (CRUD)</h3>
-      <div className="tabs">
-        {CLASSES.map((c) => (
-          <button key={c} className={c === classe ? "active" : ""} onClick={() => setClasse(c)}>{c}</button>
-        ))}
-      </div>
-      <ClassePage key={`${classe}-${version}`} classe={classe} />
+      <Section icone={Layers} titre="Gestion des individus (CRUD)">
+        <div className="tabs">
+          {CLASSES.map((c) => (
+            <button key={c} className={c === classe ? "active" : ""} onClick={() => setClasse(c)}>{c}</button>
+          ))}
+        </div>
+        <ClassePage key={`${classe}-${version}`} classe={classe} />
+      </Section>
 
-      <h3>Requêtes SPARQL</h3>
+      <Section icone={Database} titre="Requêtes SPARQL">
       <QueryCard titre="Prérequis directs et indirects (chemin aPourPrerequis+)" url="/api/m2/cours/{cours}/prerequis" params={{ cours: "Angular" }} />
       <QueryCard titre="Cours accessibles ensuite (estPrerequisDe+)" url="/api/m2/cours/{cours}/suite" params={{ cours: "Algorithmique" }} />
       <QueryCard titre="Cours d'une classe de domaine (sous-classes incluses)" url="/api/m2/cours" query={{ domaine: "GenieLogiciel" }} />
@@ -47,6 +54,29 @@ export default function Membre2() {
       <QueryCard titre="Recherche plein texte (intitulé, code, mots-clés du domaine)" url="/api/m2/recherche" query={{ q: "web" }} />
       <QueryCard titre="Statistiques par domaine (COUNT, SUM, AVG)" url="/api/m2/domaines/statistiques" />
       <QueryCard titre="Prérequis non validés par un étudiant (FILTER NOT EXISTS)" url="/api/m2/etudiants/{etudiant}/peut-suivre/{cours}" params={{ etudiant: "Ahmed", cours: "Angular" }} />
+      </Section>
+    </div>
+  );
+}
+
+// ---------- Chiffres clés (routes existantes du membre 2) ----------
+function ChiffresCles({ version }) {
+  const [c, setC] = useState(null);
+  useEffect(() => {
+    Promise.all([api.get("/api/m2/cours"), api.get("/api/m2/domaines/statistiques"), api.get("/api/m2/cours/niveau/Avancé")])
+      .then(([cours, domaines, avances]) => {
+        const uniques = new Map(cours.map((x) => [x.cours, x]));
+        setC({ cours: uniques.size, domaines: domaines.length, avances: avances.length,
+               credits: [...uniques.values()].reduce((t, x) => t + (x.credits ?? 0), 0) });
+      })
+      .catch(() => setC({}));
+  }, [version]);
+  return (
+    <div className="grille-stats">
+      <StatCard icone={BookOpen} valeur={c?.cours} libelle="cours au catalogue" chargement={!c} />
+      <StatCard icone={FolderTree} valeur={c?.domaines} libelle="grands domaines" ton="deduit" chargement={!c} />
+      <StatCard icone={Hash} valeur={c?.credits} libelle="crédits ECTS au total" ton="ok" chargement={!c} />
+      <StatCard icone={TrendingUp} valeur={c?.avances} libelle="cours de niveau avancé" chargement={!c} />
     </div>
   );
 }
@@ -79,9 +109,9 @@ function CheminPrerequis({ version }) {
         </select>
       </label>
       <div className="chips" style={{ alignItems: "center" }}>
-        {avant.map((p) => [etape(p.prerequis, p.semestre, { background: "#eef1f6", color: "#374151" }), <span key={`f-${p.prerequis}`}>→</span>])}
-        {etape(choix, null, { background: "#2563eb", color: "#fff", fontWeight: 600 })}
-        {apres.map((s) => [<span key={`g-${s.coursSuivant}`}>→</span>, etape(s.coursSuivant, s.semestre, { background: "#dcfce7", color: "#166534" })])}
+        {avant.map((p) => [etape(p.prerequis, p.semestre, { background: "var(--panel-hover)", color: "var(--text-2)" }), <span key={`f-${p.prerequis}`}>→</span>])}
+        {etape(choix, null, { background: "var(--primary)", color: "#fff", fontWeight: 600 })}
+        {apres.map((s) => [<span key={`g-${s.coursSuivant}`}>→</span>, etape(s.coursSuivant, s.semestre, { background: "var(--ok-soft)", color: "var(--ok-text)" })])}
       </div>
       <p className="muted">Gris : prérequis (aPourPrerequis+, transitive). Vert : cours débloqués ensuite (estPrerequisDe+).</p>
     </div>
@@ -117,10 +147,16 @@ function PeutSuivre({ version }) {
           </select>
         </label>
       </div>
-      {manquants && manquants.length === 0 && <p className="badge ok" style={{ fontSize: 14 }}>✔ {etu} a validé tous les prérequis de {c}</p>}
+      {manquants && manquants.length === 0 && (
+        <p className="badge ok" style={{ fontSize: 14, padding: "6px 12px", whiteSpace: "normal" }}>
+          <CircleCheck size={16} /> {etu} a validé tous les prérequis de {c}
+        </p>
+      )}
       {manquants && manquants.length > 0 && (
         <div>
-          <p className="error">✘ Il manque {manquants.length} prérequis à {etu} :</p>
+          <p className="badge ko" style={{ fontSize: 14, padding: "6px 12px", whiteSpace: "normal" }}>
+            <CircleX size={16} /> Il manque {manquants.length} prérequis à {etu} :
+          </p>
           <ul>{manquants.map((m) => <li key={m.prerequisManquant}>{m.intitule ?? m.prerequisManquant} (semestre {m.semestre})</li>)}</ul>
         </div>
       )}
@@ -157,7 +193,7 @@ function NouveauCours({ onCree }) {
   const [f, setF] = useState(vide);
   const [domaines, setDomaines] = useState([]);
   const [cours, setCours] = useState([]);
-  const [msg, setMsg] = useState("");
+  const toast = useToast();
 
   useEffect(() => {
     api.individus("Domaine").then(setDomaines);
@@ -172,18 +208,18 @@ function NouveauCours({ onCree }) {
         ...f, code: f.code || null,
         credits: Number(f.credits), volumeHoraire: Number(f.volumeHoraire), semestre: Number(f.semestre),
       });
-      setMsg(`✔ ${f.id} créé`);
+      toast.succes(`${f.id} créé`);
       setF(vide);
       onCree();
       api.individus("Cours").then(setCours);
     } catch (err) {
-      setMsg(`✘ ${err.message}`);
+      toast.erreur(err.message);
     }
   }
 
   return (
     <form className="card" onSubmit={envoyer}>
-      <h4>Créer un cours</h4>
+      <h4><Plus size={16} style={{ verticalAlign: "-3px" }} /> Créer un cours</h4>
       <div className="row">
         <label>Identifiant<input required placeholder="ex. React" {...champ("id")} /></label>
         <label>Intitulé<input required {...champ("intitule")} /></label>
@@ -210,8 +246,7 @@ function NouveauCours({ onCree }) {
           {cours.map((x) => <option key={x.individu}>{x.individu}</option>)}
         </select>
       </label>
-      <button className="primary" type="submit">Créer</button>
-      {msg && <p className={msg.startsWith("✔") ? "info" : "error"}>{msg}</p>}
+      <button className="primary" type="submit"><Plus size={16} /> Créer</button>
       <p className="muted">INSERT DATA : le cours + appartientADomaine + aPourPrerequis et son inverse estPrerequisDe</p>
     </form>
   );
@@ -222,17 +257,17 @@ function AjoutPrerequis({ version, onChange }) {
   const [cours, setCours] = useState([]);
   const [c, setC] = useState("Algorithmique");
   const [p, setP] = useState("Angular");
-  const [msg, setMsg] = useState("");
+  const toast = useToast();
 
   useEffect(() => { api.individus("Cours").then(setCours); }, [version]);
 
   async function ajouter() {
     try {
       await api.put(`/api/m2/cours/${c}/prerequis`, { prerequis: p });
-      setMsg(`✔ ${p} est maintenant un prérequis de ${c}`);
+      toast.succes(`${p} est maintenant un prérequis de ${c}`);
       onChange();
     } catch (err) {
-      setMsg(`✘ ${err.message}`);
+      toast.erreur(err.message);
     }
   }
 
@@ -251,9 +286,8 @@ function AjoutPrerequis({ version, onChange }) {
             {cours.map((x) => <option key={x.individu}>{x.individu}</option>)}
           </select>
         </label>
-        <button className="primary" onClick={ajouter}>Ajouter</button>
+        <button className="primary" onClick={ajouter}><Plus size={16} /> Ajouter</button>
       </div>
-      {msg && <p className={msg.startsWith("✔") ? "info" : "error"}>{msg}</p>}
       <p className="muted">Avant l'INSERT, une requête vérifie que le prérequis ne dépend pas déjà du cours (aPourPrerequis+) : pas de boucle.</p>
     </div>
   );

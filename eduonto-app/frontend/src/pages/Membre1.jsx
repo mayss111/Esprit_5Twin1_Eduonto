@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
+import { BadgeCheck, Brain, Database, GraduationCap, HandCoins, Layers, School, UserPlus, Users } from "lucide-react";
 import { api } from "../api.js";
 import ClassePage from "../components/ClassePage.jsx";
 import QueryCard from "../components/QueryCard.jsx";
+import Section from "../components/Section.jsx";
+import StatCard from "../components/StatCard.jsx";
+import { useToast } from "../components/Toast.jsx";
 
 // MEMBRE 1 — Personne + Formation
 const CLASSES = ["Personne", "Formation"];
@@ -13,26 +17,29 @@ export default function Membre1() {
 
   return (
     <div>
-      <h2>Membre 1 · Personne + Formation</h2>
+      <ChiffresCles version={version} />
 
-      <h3>Tableau de bord des formations</h3>
-      <div className="grid2">
-        <StatistiquesFormations version={version} />
-        <Inscription onCree={rafraichir} />
-      </div>
+      <Section icone={School} titre="Tableau de bord des formations">
+        <div className="grid2" style={{ marginTop: 0 }}>
+          <StatistiquesFormations version={version} />
+          <Inscription onCree={rafraichir} />
+        </div>
+      </Section>
 
-      <h3>Profil d'un étudiant (raisonnement)</h3>
-      <ProfilEtudiant version={version} onChange={rafraichir} />
+      <Section icone={Brain} titre="Profil d'un étudiant (raisonnement)">
+        <ProfilEtudiant version={version} onChange={rafraichir} />
+      </Section>
 
-      <h3>Gestion des individus (CRUD)</h3>
-      <div className="tabs">
-        {CLASSES.map((c) => (
-          <button key={c} className={c === classe ? "active" : ""} onClick={() => setClasse(c)}>{c}</button>
-        ))}
-      </div>
-      <ClassePage key={`${classe}-${version}`} classe={classe} />
+      <Section icone={Layers} titre="Gestion des individus (CRUD)">
+        <div className="tabs">
+          {CLASSES.map((c) => (
+            <button key={c} className={c === classe ? "active" : ""} onClick={() => setClasse(c)}>{c}</button>
+          ))}
+        </div>
+        <ClassePage key={`${classe}-${version}`} classe={classe} />
+      </Section>
 
-      <h3>Requêtes SPARQL</h3>
+      <Section icone={Database} titre="Requêtes SPARQL">
       <QueryCard titre="Étudiants par année (FILTER numérique)" url="/api/m1/etudiants" query={{ annee: 4 }} />
       <QueryCard titre="Formation d'un étudiant (jointure)" url="/api/m1/etudiants/{etudiant}/formation" params={{ etudiant: "Ahmed" }} />
       <QueryCard titre="Classes affirmées / déduites d'un étudiant (owl:equivalentClass)" url="/api/m1/etudiants/{etudiant}/profil" params={{ etudiant: "Omar" }} />
@@ -41,6 +48,27 @@ export default function Membre1() {
       <QueryCard titre="Étudiants d'une formation" url="/api/m1/formations/{formation}/etudiants" params={{ formation: "Ingenieur_TWIN" }} />
       <QueryCard titre="Statistiques par formation (COUNT, SUM(IF), sous-requêtes)" url="/api/m1/formations/statistiques" />
       <QueryCard titre="Encadrements (relation + inverse, UNION)" url="/api/m1/encadrements" />
+      </Section>
+    </div>
+  );
+}
+
+// ---------- Chiffres clés (routes existantes du membre 1) ----------
+function ChiffresCles({ version }) {
+  const [c, setC] = useState(null);
+  useEffect(() => {
+    Promise.all([api.get("/api/m1/etudiants"), api.get("/api/m1/formations/statistiques"),
+                 api.get("/api/m1/boursiers"), api.get("/api/m1/enseignants")])
+      .then(([e, f, b, ens]) => setC({ etudiants: e.length, formations: f.length, boursiers: b.length, enseignants: ens.length }))
+      .catch(() => setC({}));
+  }, [version]);
+  return (
+    <div className="grille-stats">
+      <StatCard icone={GraduationCap} valeur={c?.etudiants} libelle="étudiants" chargement={!c} />
+      <StatCard icone={School} valeur={c?.formations} libelle="formations" ton="deduit" chargement={!c} />
+      <StatCard icone={HandCoins} valeur={c?.boursiers} libelle="boursiers" ton="ok" chargement={!c}
+                detail={c?.etudiants ? `${Math.round((100 * c.boursiers) / c.etudiants)} % des étudiants` : null} />
+      <StatCard icone={Users} valeur={c?.enseignants} libelle="enseignants" chargement={!c} />
     </div>
   );
 }
@@ -74,7 +102,7 @@ function Inscription({ onCree }) {
   const vide = { prenom: "", nom: "", email: "", formation: "", annee: 1, boursier: false };
   const [f, setF] = useState(vide);
   const [formations, setFormations] = useState([]);
-  const [msg, setMsg] = useState("");
+  const toast = useToast();
 
   useEffect(() => { api.individus("Formation").then(setFormations); }, []);
   const champ = (k) => ({ value: f[k], onChange: (e) => setF({ ...f, [k]: e.target.value }) });
@@ -89,17 +117,17 @@ function Inscription({ onCree }) {
       const r = await api.post("/api/m1/etudiants", {
         ...f, id: identifiant, annee: Number(f.annee), email: f.email || null,
       });
-      setMsg(`✔ ${r.cree} inscrit (matricule ${r.matricule})`);
+      toast.succes(`${r.cree} inscrit (matricule ${r.matricule})`);
       setF(vide);
       onCree();
     } catch (err) {
-      setMsg(`✘ ${err.message}`);
+      toast.erreur(err.message);
     }
   }
 
   return (
     <form className="card" onSubmit={envoyer}>
-      <h4>Inscrire un étudiant</h4>
+      <h4><UserPlus size={16} style={{ verticalAlign: "-3px" }} /> Inscrire un étudiant</h4>
       <div className="row">
         <label>Prénom<input required {...champ("prenom")} /></label>
         <label>Nom<input required {...champ("nom")} /></label>
@@ -112,16 +140,15 @@ function Inscription({ onCree }) {
           </select>
         </label>
         <label>Année<input type="number" min="1" max="5" {...champ("annee")} /></label>
-        <label style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        <label className="case">
           <input type="checkbox" checked={f.boursier} onChange={(e) => setF({ ...f, boursier: e.target.checked })} />
           Boursier
         </label>
       </div>
       <label>Email (optionnel)<input type="email" {...champ("email")} /></label>
       <button className="primary" type="submit" disabled={!identifiant || identifiant === "_"}>
-        Inscrire {identifiant !== "_" ? identifiant : ""}
+        <UserPlus size={16} /> Inscrire {identifiant !== "_" ? identifiant : ""}
       </button>
-      {msg && <p className={msg.startsWith("✔") ? "info" : "error"}>{msg}</p>}
       <p className="muted">INSERT DATA : l'étudiant + inscritA (formation) + matricule et date générés</p>
     </form>
   );
@@ -134,7 +161,7 @@ function ProfilEtudiant({ version, onChange }) {
   const [choix, setChoix] = useState("Omar");
   const [classes, setClasses] = useState([]);
   const [encadrant, setEncadrant] = useState("");
-  const [msg, setMsg] = useState("");
+  const toast = useToast();
 
   useEffect(() => {
     api.individus("Etudiant").then(setEtudiants);
@@ -153,10 +180,10 @@ function ProfilEtudiant({ version, onChange }) {
   async function affecter(prof) {
     try {
       await api.put(`/api/m1/etudiants/${choix}/encadrant`, { encadrant: prof });
-      setMsg(`✔ ${prof} encadre maintenant ${choix}`);
+      toast.succes(`${prof} encadre maintenant ${choix}`);
       onChange();
     } catch (err) {
-      setMsg(`✘ ${err.message}`);
+      toast.erreur(err.message);
     }
   }
 
@@ -164,7 +191,7 @@ function ProfilEtudiant({ version, onChange }) {
     <div className="card">
       <div className="row">
         <label>Étudiant
-          <select value={choix} onChange={(e) => { setChoix(e.target.value); setMsg(""); }}>
+          <select value={choix} onChange={(e) => setChoix(e.target.value)}>
             {etudiants.map((x) => <option key={x.individu}>{x.individu}</option>)}
           </select>
         </label>
@@ -177,17 +204,13 @@ function ProfilEtudiant({ version, onChange }) {
       </div>
       <div className="chips">
         {classes.map((c) => (
-          <span key={c.classe} className="badge" title={c.origine}
-                style={c.origine === "affirmée"
-                  ? { background: "#e8efff", color: "#1d4ed8" }
-                  : { background: "#fef3c7", color: "#92400e" }}>
-            {c.classe} · {c.origine}
+          <span key={c.classe} className={`badge ${c.origine === "affirmée" ? "neutre" : "deduit"}`} title={c.origine}>
+            {c.origine !== "affirmée" && <BadgeCheck size={13} />}{c.classe} · {c.origine}
           </span>
         ))}
       </div>
-      {msg && <p className={msg.startsWith("✔") ? "info" : "error"}>{msg}</p>}
       <p className="muted">
-        En jaune : classes définies (≡) remplies par le raisonneur HermiT, ex. EtudiantOption, EtudiantARisque.
+        En ambre : classes définies (≡) remplies par le raisonneur HermiT, ex. EtudiantOption, EtudiantARisque.
         L'affectation met à jour estEncadrePar ET son inverse encadre (DELETE / INSERT).
       </p>
     </div>

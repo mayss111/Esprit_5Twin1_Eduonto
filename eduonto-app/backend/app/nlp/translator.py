@@ -31,6 +31,7 @@ LABEL_PROPS = ["prenom", "nom", "intitule", "intituleFormation", "libelleCompete
 #                              + POIDS["semantique"] × similarité cosinus avec ses questions-exemples
 POIDS = {"mots_cles": 0.5, "semantique": 0.5}
 BONUS_PARAMETRE = 0.03     # par paramètre rempli : à score égal, l'intention la plus précise passe devant
+PENALITE_ENTITE = 0.15     # par entité citée dont aucun paramètre de l'intention n'a l'usage (« … en TWIN »)
 SEUIL_SEMANTIQUE = 0.6     # sans aucun mot-clé, la similarité seule doit atteindre ce seuil
 SEUIL_ZERO_SHOT = 0.4
 SEUIL_CONFIANCE = 0.35     # en dessous : la réponse propose des questions-exemples
@@ -139,10 +140,16 @@ class Translator:
         valeurs = " ".join(f"edu:{p}" for p in LABEL_PROPS)
         for r in store.select(f"SELECT ?i ?v WHERE {{ VALUES ?p {{ {valeurs} }} ?i ?p ?v }}"):
             labels.setdefault(r["i"], set()).add(normalize(str(r["v"])))
+        for r in store.select("SELECT ?i ?code WHERE { ?i edu:codeFormation ?code }"):
+            labels.setdefault(r["i"], set()).add(normalize(str(r["code"])))
+        classes = store.select("SELECT ?c WHERE { ?c a owl:Class . FILTER(isIRI(?c)) }")
+        noms_classes = {normalize(split_camel(r["c"])) for r in classes}
         libelles = {}                                     # libellé d'un seul mot -> id (pour la correction des fautes)
         for ident in entity_types:
             # « JavaScript » → « java script » ET « javascript » : l'identifiant collé est aussi reconnu
             phrases = {normalize(split_camel(ident)), normalize(ident.replace("_", " "))} | labels.get(ident, set())
+            if "Formation" in entity_types[ident]:
+                phrases |= self.alias_formation(ident, labels.get(ident, set())) - noms_classes
             patterns = [self.nlp.make_doc(ph) for ph in phrases if len(ph) > 2]
             if patterns:
                 matcher.add("IND|" + ident, patterns)
@@ -150,7 +157,7 @@ class Translator:
                 if " " not in ph and len(ph) >= 3:
                     libelles.setdefault(ph, ident)
         mots_connus = set()                               # mots à ne jamais « corriger » (mots-clés, classes, valeurs…)
-        for r in store.select("SELECT ?c WHERE { ?c a owl:Class . FILTER(isIRI(?c)) }"):
+        for r in classes:
             words = normalize(split_camel(r["c"]))
             matcher.add("CLS|" + r["c"], [self.nlp.make_doc(words), self.nlp.make_doc(words + "s")])
             mots_connus.update(words.split())
@@ -163,6 +170,19 @@ class Translator:
         mots_connus.update(w for expr in OPERATEURS for w in expr.split())
         self.matcher, self.entity_types = matcher, entity_types
         self.libelles, self.mots_connus = libelles, mots_connus
+
+    @staticmethod
+    def alias_formation(ident, libelles):
+        """Noms courts d'une formation : fin de l'identifiant (Ingenieur_TroncCommun → « tronc commun »)
+        et fin du code (ING-TWIN → « twin »). Les noms de classes (« génie logiciel ») sont retirés par l'appelant."""
+        alias = set()
+        if "_" in ident:
+            alias.add(normalize(split_camel(ident.split("_", 1)[1])))
+        for lib in libelles:
+            fin = lib.split()[-1]
+            if len(lib.split()) == 2 and len(fin) >= 3:   # code « ing twin » → « twin »
+                alias.add(fin)
+        return {a for a in alias if len(a) >= 3}
 
     def entities(self, doc):
         """Entités trouvées par le PhraseMatcher. Renvoie (entités, positions [(début, fin, genre)])."""
@@ -351,8 +371,15 @@ class Translator:
         anaphore = bool(ANAPHORES & {t.text for t in doc}) or text.startswith("et ")
         sims = self.similarites(self.masquer(a))
 
+        # types « utiles » des individus cités (Etudiant, Cours, Formation…)
+        types_cites = [self.entity_types.get(e["id"], set()) & self.types_slots for e in ents if e["genre"] == "individu"]
         candidates = []
         for intent in ALL_INTENTS:
+            # mots_requis : une liste (un de ces mots) ou une liste de groupes (un mot de CHAQUE groupe)
+            requis = intent.get("mots_requis") or []
+            groupes = requis if requis and isinstance(requis[0], list) else [requis] if requis else []
+            if not all(any(re.search(rf"\b{re.escape(m)}\b", text) or m in lemmas for m in g) for g in groupes):
+                continue                                  # ex. « combien » seul ne suffit pas à nb_competences_metier
             filled = self.fill_slots(intent, ents, numbers, texte_libre, ctx)
             if filled is None:
                 continue
@@ -363,6 +390,10 @@ class Translator:
             kw_norm = 1 - 0.5 ** kw
             sem = sims.get(intent["name"], 0.0)
             base = POIDS["mots_cles"] * kw_norm + POIDS["semantique"] * sem if sims else kw_norm
+            # une entité citée que l'intention n'utilise pas : elle répond probablement à une autre question
+            types_intent = {t for t in intent.get("slots", {}).values() if isinstance(t, str)}
+            orphelines = sum(1 for t in types_cites if t and not t & types_intent)
+            base = max(0.0, base - PENALITE_ENTITE * orphelines)
             # un paramètre pris dans le contexte ne compte que si la question y renvoie (« ses », « sa »…)
             # (une classe, slot générique de lister_classe, ne rend pas l'intention plus précise)
             de_la_question = len([s for s, t in intent.get("slots", {}).items() if t != "CLASS"]) - len(du_ctx)

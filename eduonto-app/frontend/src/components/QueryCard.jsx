@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { LoaderCircle, Play } from "lucide-react";
 import { api } from "../api.js";
 import ResultTable from "./ResultTable.jsx";
+import SparqlBlock from "./SparqlBlock.jsx";
 
 /**
  * Carte qui appelle une requête spécifique d'un membre (GET).
@@ -14,9 +16,12 @@ export default function QueryCard({ titre, url, params = {}, query = {} }) {
   const [rows, setRows] = useState(null);
   const [sparql, setSparql] = useState("");
   const [erreur, setErreur] = useState("");
+  const [chargement, setChargement] = useState(false);
 
-  async function lancer() {
+  async function lancer(e) {
+    e?.preventDefault();
     setErreur("");
+    setChargement(true);
     let chemin = url.replace(/\{(\w+)\}/g, (_, k) => encodeURIComponent(valeurs[k] ?? ""));
     const qs = Object.keys(query)
       .filter((k) => valeurs[k] !== "")
@@ -27,33 +32,38 @@ export default function QueryCard({ titre, url, params = {}, query = {} }) {
       const { data, sparql } = await api.getAvecSparql(chemin);
       setRows(data);
       setSparql(sparql);
-    } catch (e) {
-      setErreur(e.message);
+    } catch (e2) {
+      setErreur(e2.message);
       setSparql("");
+    } finally {
+      setChargement(false);
     }
   }
 
   return (
-    <div className="card">
-      <h4>{titre}</h4>
-      <div className="row">
+    <form className="card" onSubmit={lancer}>
+      <div className="qc-entete">
+        <h4>{titre}</h4>
+        <span className="tag-get">GET</span>
+      </div>
+      <code className="url">{url}</code>
+      <div className="qc-champs">
         {Object.keys(valeurs).map((k) => (
           <label key={k}>
             {k}
             <input value={valeurs[k]} onChange={(e) => setValeurs({ ...valeurs, [k]: e.target.value })} />
           </label>
         ))}
-        <button onClick={lancer}>Exécuter</button>
+        <div>
+          <button type="submit" className="primary" disabled={chargement}>
+            {chargement ? <LoaderCircle size={16} className="spinner" /> : <Play size={16} />}
+            {chargement ? "Exécution…" : "Exécuter"}
+          </button>
+        </div>
       </div>
-      <code className="url">GET {url}</code>
-      {erreur && <p className="error">{erreur}</p>}
-      <ResultTable rows={rows} />
-      {sparql && (
-        <details>
-          <summary>Voir la requête SPARQL</summary>
-          <pre>{sparql}</pre>
-        </details>
-      )}
-    </div>
+      {erreur && <p className="error" role="alert">{erreur}</p>}
+      {rows && <div className="qc-resultat"><ResultTable rows={rows} /></div>}
+      <SparqlBlock sparql={sparql} />
+    </form>
   );
 }

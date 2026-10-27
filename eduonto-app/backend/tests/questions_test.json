@@ -10,7 +10,6 @@
   {"question": "Quels sont les inscrits de la formation Data Science ?", "intention": "etudiants_formation", "parametres": {"formation": "Ingenieur_DataScience"}, "categorie": "ambigu"},
   {"question": "Qui est le tuteur d'Omar ?", "intention": "encadrant_etudiant", "parametres": {"etudiant": "Omar"}, "categorie": "simple"},
   {"question": "Lina est encadrée par quel enseignant ?", "intention": "encadrant_etudiant", "parametres": {"etudiant": "Lina"}, "categorie": "reformulation"},
-
   {"question": "Avant Angular, quels cours faut-il avoir suivis ?", "intention": "prerequis_cours", "parametres": {"cours": "Angular"}, "categorie": "simple"},
   {"question": "De quoi dépend le cours Web sémantique ?", "intention": "prerequis_cours", "parametres": {"cours": "WebSemantique"}, "categorie": "reformulation"},
   {"question": "Quels modules sont rattachés au domaine Développement web ?", "intention": "cours_domaine", "parametres": {"domaine": "DeveloppementWeb"}, "categorie": "simple"},
@@ -23,7 +22,6 @@
   {"question": "Cours intermédiaires disponibles ?", "intention": "cours_niveau", "parametres": {"niveau": "Intermédiaire"}, "categorie": "enumeration"},
   {"question": "Sarra a-t-elle les prérequis pour Angular ?", "intention": "prerequis_manquants", "parametres": {"etudiant": "Sarra", "cours": "Angular"}, "categorie": "ambigu"},
   {"question": "Est-ce que Yassine peut s'inscrire en Angular ?", "intention": "prerequis_manquants", "parametres": {"etudiant": "Yassine", "cours": "Angular"}, "categorie": "simple"},
-
   {"question": "Quelles sont les compétences nécessaires pour le métier Data scientist ?", "intention": "competences_metier", "parametres": {"metier": "DataScientist"}, "categorie": "simple"},
   {"question": "Pour devenir architecte logiciel, que faut-il maîtriser ?", "intention": "competences_metier", "parametres": {"metier": "ArchitecteLogiciel"}, "categorie": "simple"},
   {"question": "Qu'est-ce qui manque encore à Yassine pour son métier visé ?", "intention": "competences_manquantes", "parametres": {"etudiant": "Yassine"}, "categorie": "simple"},
@@ -36,7 +34,6 @@
   {"question": "Un ingénieur peut prétendre à quels métiers ?", "intention": "metiers_niveau", "parametres": {"niveau": "Ingénieur"}, "categorie": "reformulation"},
   {"question": "Nombre de compétences exigées pour chaque métier", "intention": "nb_competences_metier", "parametres": {}, "categorie": "simple"},
   {"question": "Quel métier demande le plus de compétences ?", "intention": "nb_competences_metier", "parametres": {}, "categorie": "simple"},
-
   {"question": "Montre les évaluations au-dessus de 13", "intention": "evaluations_note", "parametres": {"n": 13, "op": ">"}, "categorie": "comparaison"},
   {"question": "Évaluations avec une note d'au moins 12", "intention": "evaluations_note", "parametres": {"n": 12, "op": ">="}, "categorie": "comparaison"},
   {"question": "Quelles notes sont en dessous de 9 ?", "intention": "evaluations_note", "parametres": {"n": 9, "op": "<"}, "categorie": "comparaison"},
@@ -53,11 +50,9 @@
   {"question": "Ahmed a-t-il des badges ?", "intention": "preuves_etudiant", "parametres": {"etudiant": "Ahmed"}, "categorie": "simple"},
   {"question": "Montre le relevé de Lina", "intention": "notes_etudiant", "parametres": {"etudiant": "Lina"}, "categorie": "simple"},
   {"question": "Quelles notes a eues Sarra ?", "intention": "notes_etudiant", "parametres": {"etudiant": "Sarra"}, "categorie": "simple"},
-
   {"question": "Affiche toutes les formations", "intention": "lister_classe", "parametres": {"classe": "Formation"}, "categorie": "simple"},
   {"question": "Quels sont les enseignants ?", "intention": "lister_classe", "parametres": {"classe": "Enseignant"}, "categorie": "simple"},
   {"question": "Liste les domaines", "intention": "lister_classe", "parametres": {"classe": "Domaine"}, "categorie": "simple"},
-
   {"question": "Qui enseigne Javascrpt ?", "intention": "enseignant_cours", "parametres": {"cours": "JavaScript"}, "categorie": "faute"},
   {"question": "Quels sont les prérequis d'Angluar ?", "intention": "prerequis_cours", "parametres": {"cours": "Angular"}, "categorie": "faute"},
   {"question": "Quelle est la moyenne de Sara ?", "intention": "moyenne_etudiant", "parametres": {"etudiant": "Sarra"}, "categorie": "faute"},
@@ -65,7 +60,6 @@
   {"question": "Quelles compétences manquent à Ahmd ?", "intention": "competences_manquantes", "parametres": {"etudiant": "Ahmed"}, "categorie": "faute"},
   {"question": "Qui enseigne Algoritmique ?", "intention": "enseignant_cours", "parametres": {"cours": "Algorithmique"}, "categorie": "faute"},
   {"question": "Omar peut-il suivre Typscript ?", "intention": "prerequis_manquants", "parametres": {"etudiant": "Omar", "cours": "TypeScript"}, "categorie": "faute"},
-
   {"question": "Et sa moyenne ?", "contexte": [{"id": "Ahmed", "genre": "individu"}], "intention": "moyenne_etudiant", "parametres": {"etudiant": "Ahmed"}, "categorie": "suite"},
   {"question": "Quelles sont ses notes ?", "contexte": [{"id": "Sarra", "genre": "individu"}], "intention": "notes_etudiant", "parametres": {"etudiant": "Sarra"}, "categorie": "suite"},
   {"question": "Et ses badges alors ?", "contexte": [{"id": "Yassine", "genre": "individu"}], "intention": "preuves_etudiant", "parametres": {"etudiant": "Yassine"}, "categorie": "suite"},
@@ -73,5 +67,11 @@
   {"question": "Dans quelle formation est-elle ?", "contexte": [{"id": "Lina", "genre": "individu"}], "intention": "formation_etudiant", "parametres": {"etudiant": "Lina"}, "categorie": "suite"},
   {"question": "Que lui manque-t-il comme compétences ?", "contexte": [{"id": "Ahmed", "genre": "individu"}], "intention": "competences_manquantes", "parametres": {"etudiant": "Ahmed"}, "categorie": "suite"},
   {"question": "Qui l'enseigne ?", "contexte": [{"id": "Angular", "genre": "individu"}], "intention": "enseignant_cours", "parametres": {"cours": "Angular"}, "categorie": "suite"},
-  {"question": "Est-elle admise ?", "contexte": [{"id": "Sarra", "genre": "individu"}], "intention": "moyenne_etudiant", "parametres": {"etudiant": "Sarra"}, "categorie": "suite"}
+  {"question": "Est-elle admise ?", "contexte": [{"id": "Sarra", "genre": "individu"}], "intention": "moyenne_etudiant", "parametres": {"etudiant": "Sarra"}, "categorie": "suite"},
+  {"question": "Combien d'étudiants sont inscrits en TWIN ?", "intention": "nb_etudiants_formation", "parametres": {"formation": "Ingenieur_TWIN"}, "categorie": "agregat"},
+  {"question": "Combien d'étudiants par formation ?", "intention": "nb_etudiants_par_formation", "parametres": {}, "categorie": "agregat"},
+  {"question": "Qui suit le tronc commun ?", "intention": "etudiants_formation", "parametres": {"formation": "Ingenieur_TroncCommun"}, "categorie": "alias"},
+  {"question": "Combien d'inscrits compte le tronc commun ?", "intention": "nb_etudiants_formation", "parametres": {"formation": "Ingenieur_TroncCommun"}, "categorie": "agregat"},
+  {"question": "Quel est le nombre d'étudiants en data science ?", "intention": "nb_etudiants_formation", "parametres": {"formation": "Ingenieur_DataScience"}, "categorie": "agregat"},
+  {"question": "Quels étudiants sont en licence génie logiciel ?", "intention": "etudiants_formation", "parametres": {"formation": "Licence_GenieLogiciel"}, "categorie": "alias"}
 ]

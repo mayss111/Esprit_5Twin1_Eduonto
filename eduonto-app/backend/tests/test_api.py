@@ -102,6 +102,10 @@ def test_creation_metier_refusee(metier):
     ("Quelles évaluations ont une note inférieure à 10 ?", "evaluations_note"),
     ("Quels métiers peut viser un étudiant de niveau Master ?", "metiers_niveau"),
     ("Combien de compétences demande chaque métier ?", "nb_competences_metier"),
+    ("Combien d'étudiants sont inscrits en TWIN ?", "nb_etudiants_formation"),
+    ("Combien d'étudiants par formation ?", "nb_etudiants_par_formation"),
+    ("Qui suit le tronc commun ?", "etudiants_formation"),
+    ("Quels sont les prérequis d'Angulr ?", "prerequis_cours"),
 ])
 def test_non_regression_nlp(question, intention):
     r = client.post("/api/ask", json={"question": question}).json()
