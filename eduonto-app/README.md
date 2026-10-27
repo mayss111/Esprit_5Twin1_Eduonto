@@ -197,8 +197,22 @@ Pas d'API LLM (ni Gemini, ni OpenAI). Le pipeline utilise des **bibliothèques N
 4. **Détection d'intention** par score de mots-clés, avec en option un repli **Hugging Face Transformers**
    en zero-shot (`MoritzLaurer/mDeBERTa-v3-base-mnli-xnli`), activé par `EDUONTO_HF=1`
    (nécessite `pip install transformers torch`).
-5. **Remplissage des paramètres** (slots) avec vérification du type dans l'ontologie.
-6. **Génération SPARQL** à partir de gabarits, puis exécution par rdflib.
+5. **Remplissage des paramètres** (slots) avec vérification du type dans l'ontologie : entités, nombres
+   avec leur opérateur (« inférieure à 10 » → `<`), valeurs d'énumération (Master, Rattrapage, Avancé…).
+6. **Génération SPARQL** à partir de gabarits, validée par `rdflib.prepareQuery` (SELECT uniquement), puis exécution.
+
+Améliorations optionnelles (le serveur démarre sans elles) :
+
+| Module | Rôle | Activation |
+|---|---|---|
+| rapidfuzz | fautes de frappe : « Angulr » → Angular | `pip install rapidfuzz` |
+| sentence-transformers (`paraphrase-multilingual-MiniLM-L12-v2`) | similarité cosinus avec les questions-exemples de chaque intention | `pip install sentence-transformers` + `EDUONTO_EMB=1` |
+| transformers (mDeBERTa) | repli zero-shot | `EDUONTO_HF=1` |
+
+La réponse de `/api/ask` contient aussi `confiance`, `alternatives`, `suggestions` (si la question est ambiguë)
+et `contexte` : le renvoyer avec la question suivante permet « Et ses notes ? ».
+Évaluation : `python scripts/evaluer_nlp.py` (jeu `tests/questions_test.json`, rapport `tests/rapport_nlp.md`).
+Tests de l'API : `python -m pytest tests -q`.
 
 La page Assistant affiche chaque étape : intention, entités, paramètres, SPARQL généré, résultats.
 

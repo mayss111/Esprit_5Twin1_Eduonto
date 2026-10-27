@@ -49,7 +49,8 @@ for r in (generic, membre1, membre2, membre3, membre4, membre5, membre6, nlp):
 @app.get("/api/health")
 def health():
     return {"ontologie": source, "triplets": len(store.graph),
-            "modele_spacy": translator.model, "zero_shot": translator.zero_shot is not None}
+            "modele_spacy": translator.model, "zero_shot": translator.zero_shot is not None,
+            "embeddings": translator.embedder is not None, "fuzzy": translator.fuzzy is not None}
 
 
 @app.post("/api/reload")
