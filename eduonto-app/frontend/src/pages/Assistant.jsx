@@ -9,6 +9,8 @@ const EXEMPLES = [
   "Quels sont les prérequis d'Angular ?",                                // M2
   "Quelles compétences requiert le métier de développeur full-stack ?",  // M3
   "Quelles compétences manquent à Ahmed ?",                              // M3
+  "Quels sont les métiers en tension ?",                                 // M3
+  "Quels cours développent la compétence Développer des interfaces web ?", // M3
   "Quelles évaluations ont une note supérieure à 12 ?",                  // M4
   "Quelle est la moyenne des notes par cours ?",                         // M4
   "Quels badges a obtenu Sarra ?",                                       // M4

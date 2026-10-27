@@ -3309,4 +3309,27 @@
 </owl:AllDisjointClasses>
 
 
+
+<!-- Profils de démonstration ajoutés pour le membre 3. -->
+<owl:NamedIndividual rdf:about="#ArchitecteLogiciel">
+  <rdf:type rdf:resource="#MetierDeveloppement"/>
+  <requiertCompetence rdf:resource="#DeveloppementFrontend"/>
+  <requiertCompetence rdf:resource="#GestionDonnees"/>
+  <intituleMetier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Architecte logiciel</intituleMetier>
+  <codeISCO rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2511</codeISCO>
+  <niveauEtudesRequis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingénieur</niveauEtudesRequis>
+  <estEnTension rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estEnTension>
+  <secteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Numérique</secteur>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#IngenieurIA">
+  <rdf:type rdf:resource="#MetierData"/>
+  <requiertCompetence rdf:resource="#GestionDonnees"/>
+  <requiertCompetence rdf:resource="#MachineLearning"/>
+  <intituleMetier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ingénieur en intelligence artificielle</intituleMetier>
+  <codeISCO rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2120</codeISCO>
+  <niveauEtudesRequis rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Master</niveauEtudesRequis>
+  <estEnTension rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</estEnTension>
+  <secteur rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Numérique</secteur>
+</owl:NamedIndividual>
 </rdf:RDF>

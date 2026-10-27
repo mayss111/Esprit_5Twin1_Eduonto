@@ -100,11 +100,11 @@ Pour chaque membre, **2 requêtes et 2 intentions sont déjà faites en exemple*
 - [ ] Individus : au moins 2 nouveaux
 
 ### Membre 3 — Competence + Metier
-- [ ] SPARQL : métiers en tension (estEnTension = true)
-- [ ] SPARQL : cours qui développent une compétence donnée
-- [ ] SPARQL : métiers accessibles avec un niveau d'études donné
-- [ ] NLP : « Métiers en tension », « Cours qui développent la compétence X »
-- [ ] Individus : au moins 2 nouveaux
+- [x] SPARQL : métiers en tension (estEnTension = true)
+- [x] SPARQL : cours qui développent une compétence donnée
+- [x] SPARQL : métiers accessibles avec un niveau d'études donné
+- [x] NLP : « Métiers en tension », « Cours qui développent la compétence X »
+- [x] Individus : au moins 2 nouveaux
 
 ### Membre 4 — Evaluation + PreuveDeCompetence
 - [ ] SPARQL : évaluations d'une session (Principale / Rattrapage)
@@ -133,7 +133,7 @@ Pour chaque membre, **2 requêtes et 2 intentions sont déjà faites en exemple*
 |---|---|---|
 | Requêtes SPARQL (4) | CRUD générique + 2 exemples | ses requêtes : filtre, recherche, agrégat, chemin de propriété |
 | Individus (2) | 62 individus | ses individus, créés et modifiés en démo |
-| Scénario (2) | scénario Ahmed / Omar en 7 actes | son acte du scénario |
+| Scénario (2) | scénario Ahmed / Omar en 7 actes | M3 : compétences manquantes d'Ahmed et cours qui peuvent les développer |
 | API IA (4) | pipeline spaCy + HF + 2 intentions | ses intentions + savoir expliquer le pipeline |
 | Interfaces (3) | page générique + sa page | sa page personnalisée |
 | Communication BE/FE (3) | `api.js` → FastAPI | expliquer le trajet d'une requête (front → route → SPARQL → JSON) |
