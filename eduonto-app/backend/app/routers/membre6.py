@@ -28,11 +28,36 @@ from typing import Literal
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
+from rdflib import Graph, URIRef
 
 from ..saisie import verifier_attribut
-from ..store import check_id, select, term, update
+from ..store import BASE, check_id, graph, select, term, update
 
 router = APIRouter(prefix="/api/m6", tags=["Membre 6 · ParcoursApprentissage + IndicateurApprentissage"])
+
+# Older runtime snapshots may predate these M6 seed individuals. The application
+# intentionally loads the shared runtime graph first, so restore only absent M6
+# sample subjects from the canonical ontology; never replace existing runtime data.
+_SEED_M6 = ("Parcours_Excellence_IA", "Stress_Omar", "Connexion_Lina")
+_seed_graph: Graph | None = None
+
+
+def _ensure_m6_seed_data() -> None:
+    global _seed_graph
+    if _seed_graph is None:
+        _seed_graph = Graph()
+        _seed_graph.parse(str(BASE), format="xml")
+
+    missing = [
+        URIRef(f"http://www.esprit.tn/ontologies/eduonto#{ident}")
+        for ident in _SEED_M6
+        if not any(graph.triples((URIRef(f"http://www.esprit.tn/ontologies/eduonto#{ident}"), None, None)))
+    ]
+    triples = [triple for subject in missing for triple in _seed_graph.triples((subject, None, None))]
+    if triples:
+        body = "\n".join(f"{s.n3()} {p.n3()} {o.n3()} ." for s, p, o in triples)
+        update(f"INSERT DATA {{ {body} }}")
+
 
 # Alerte d'un indicateur de type ?t, de valeur ?valeur et de seuil ?seuil (inséré tel quel : accolades simples)
 ALERTE = """
@@ -112,6 +137,7 @@ def _catalogue(filtre: str = "") -> str:
 @router.get("/parcours")
 def catalogue_parcours():
     """Tous les parcours, avec leur type le plus précis, leurs cours et le nombre d'étudiants."""
+    _ensure_m6_seed_data()
     return select(_catalogue())
 
 
@@ -205,6 +231,7 @@ def recommandation(ident: str):
     - cours en difficulté (évaluation passée avec une note < 10) -> parcours de rattrapage qui les couvrent ;
     - sinon, au moins une alerte -> parcours de rattrapage, classés par nombre de cours non validés ;
     - sinon -> parcours d'excellence, classés par nombre de cours non validés."""
+    _ensure_m6_seed_data()
     e = un_etudiant(ident)
     en_difficulte = select(f"""
         SELECT DISTINCT ?cours WHERE {{
@@ -252,6 +279,7 @@ def etudiants_a_risque(seuil: float = 0.6):
 def alertes(etudiant: str | None = None, toutes: bool = False):
     """Chaque indicateur comparé à son propre seuilAlerte, dans le sens donné par sa classe.
     Par défaut seules les alertes ; toutes=true renvoie aussi les indicateurs normaux."""
+    _ensure_m6_seed_data()
     filtre_etudiant = f"FILTER(?etudiant = edu:{un_etudiant(etudiant)})" if etudiant else ""
     return select(f"""
         SELECT ?etudiant ?prenom ?indicateur ?type ?valeur ?seuil ?sens ?alerte WHERE {{
