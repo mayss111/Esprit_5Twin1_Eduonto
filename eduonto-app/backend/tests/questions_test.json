@@ -80,5 +80,17 @@
   {"question": "Quelles ressources en français sont en libre accès ?", "intention": "ressources_libres_langue", "parametres": {"langue": "français"}, "categorie": "enumeration"},
   {"question": "Quelles ressources utilise le cours Angular ?", "intention": "ressources_cours", "parametres": {"cours": "Angular"}, "categorie": "simple"},
   {"question": "Ressources de moins de 30 minutes", "intention": "ressources_courtes", "parametres": {"n": 30, "op": "<"}, "categorie": "comparaison"},
-  {"question": "Quelles ressources du parcours d'Ahmed ?", "intention": "ressources_parcours_etudiant", "parametres": {"etudiant": "Ahmed"}, "categorie": "simple"}
+  {"question": "Quelles ressources du parcours d'Ahmed ?", "intention": "ressources_parcours_etudiant", "parametres": {"etudiant": "Ahmed"}, "categorie": "simple"},
+  {"question": "Donne-moi les indicateurs de Yassine", "intention": "indicateurs_etudiant", "parametres": {"etudiant": "Yassine"}, "categorie": "simple"},
+  {"question": "Comment se porte Omar ?", "intention": "indicateurs_etudiant", "parametres": {"etudiant": "Omar"}, "categorie": "reformulation"},
+  {"question": "Quel est le suivi de Lnia ?", "intention": "indicateurs_etudiant", "parametres": {"etudiant": "Lina"}, "categorie": "faute"},
+  {"question": "Quels étudiants sont inscrits au parcours Full-Stack ?", "intention": "etudiants_parcours", "parametres": {"parcours": "Parcours_FullStack"}, "categorie": "simple"},
+  {"question": "Qui suit le parcours Donnes ?", "intention": "etudiants_parcours", "parametres": {"parcours": "Parcours_Donnees"}, "categorie": "faute"},
+  {"question": "Yassine suit quel parcours ?", "intention": "parcours_etudiant", "parametres": {"etudiant": "Yassine"}, "categorie": "simple"},
+  {"question": "Quels indicateurs sont en alerte ?", "intention": "alertes_indicateurs", "parametres": {}, "categorie": "simple"},
+  {"question": "Qui dépasse son seuil ?", "intention": "alertes_indicateurs", "parametres": {}, "categorie": "reformulation"},
+  {"question": "Quel parcours de rattrapage pour Omar ?", "intention": "recommandation_parcours", "parametres": {"etudiant": "Omar"}, "categorie": "simple"},
+  {"question": "Que contient le parcours Full-Stack ?", "intention": "cours_parcours", "parametres": {"parcours": "Parcours_FullStack"}, "categorie": "simple"},
+  {"question": "Qui risque de décrocher ?", "intention": "etudiants_a_risque", "parametres": {}, "categorie": "simple"},
+  {"question": "Et son parcours ?", "contexte": [{"id": "Ahmed", "genre": "individu"}], "intention": "parcours_etudiant", "parametres": {"etudiant": "Ahmed"}, "categorie": "suite"}
 ]

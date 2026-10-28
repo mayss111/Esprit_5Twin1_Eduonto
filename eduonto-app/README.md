@@ -121,11 +121,12 @@ Pour chaque membre, **2 requêtes et 2 intentions sont déjà faites en exemple*
 - [x] Individus : au moins 2 nouveaux
 
 ### Membre 6 — ParcoursApprentissage + IndicateurApprentissage
-- [ ] SPARQL : tous les indicateurs d'un étudiant
-- [ ] SPARQL : étudiants qui suivent un parcours donné
-- [ ] SPARQL : comparer chaque indicateur à son propre seuilAlerte
-- [ ] NLP : « Indicateurs de X », « Qui suit le parcours X ? »
-- [ ] Individus : au moins 2 nouveaux
+- [x] SPARQL : tous les indicateurs d'un étudiant
+- [x] SPARQL : étudiants qui suivent un parcours donné
+- [x] SPARQL : comparer chaque indicateur à son propre seuilAlerte (dans le sens donné par sa classe)
+- [x] NLP : « Indicateurs de X », « Qui suit le parcours X ? » (+ alertes, parcours d'un étudiant, parcours conseillé)
+- [x] Individus : au moins 2 nouveaux (Parcours_Excellence_IA, Stress_Omar, Participation_Yassine, Connexion_Lina)
+- Guide de démo : `GUIDE_M6.md`
 
 ### Pour tous (grille de notation)
 
