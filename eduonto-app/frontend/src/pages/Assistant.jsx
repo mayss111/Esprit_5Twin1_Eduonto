@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Bot, BookOpen, Briefcase, ChevronRight, ClipboardCheck, Library, MessageSquarePlus, Send, Sparkles, UserRound, Users,
+  Bot, BookOpen, Briefcase, ChevronRight, ClipboardCheck, Library, MessageSquarePlus, Route, Send, Sparkles, UserRound, Users,
 } from "lucide-react";
 import { api } from "../api.js";
 import EmptyState from "../components/EmptyState.jsx";
@@ -50,6 +50,15 @@ const SUGGESTIONS = [
     "Comment se sont passés les examens ?",                                // M4 (repli sémantique / zero-shot)
     { libelle: "Suite : moyenne d'Ahmed → « Et ses badges ? »",            // mémoire de conversation
       questions: ["Quelle est la moyenne d'Ahmed ?", "Et ses badges ?"] },
+  ] },
+  { theme: "Parcours & suivi", icone: Route, questions: [
+    "Quels sont les indicateurs d'Omar ?",                                 // M6
+    "Quelles sont les alertes ?",                                          // M6 (sens donné par la classe)
+    "Quel parcours conseiller à Omar ?",                                   // M6 (recommandation)
+    "Qui suit le parcours Full-Stack ?",                                   // M6
+    "Comment va Yasine ?",                                                 // M6 (faute de frappe)
+    { libelle: "Suite : comment va Ahmed → « Et son parcours ? »",         // M6, mémoire de conversation
+      questions: ["Comment va Ahmed ?", "Et son parcours ?"] },
   ] },
 ];
 

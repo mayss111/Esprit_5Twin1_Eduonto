@@ -539,3 +539,15 @@ pre { background: var(--code-bg); color: var(--code-text); padding: var(--s4); b
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
 }
+
+/* ---------- Membre 6 : suivi, seuils et parcours ---------- */
+.seuil-conteneur { position: relative; overflow: visible; }
+.seuil-conteneur .barre-valeur { overflow: hidden; }
+.barre-seuil { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1px; border-radius: 2px;
+               background: var(--text); opacity: .75; }
+tr.choisi td { background: var(--primary-soft); }
+.parcours-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: var(--s4); margin-top: var(--s4); }
+.parcours-carte { margin: 0; }
+.parcours-carte .badge.neutre { margin-bottom: 4px; }
+.reco-carte { padding: var(--s4); border: 1px solid var(--border); border-left: 4px solid var(--deduit);
+              border-radius: var(--r-md); background: var(--panel-2); margin-bottom: var(--s3); }
