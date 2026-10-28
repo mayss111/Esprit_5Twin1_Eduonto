@@ -37,6 +37,11 @@ ROUTES_GET = [
     "/api/m5/etudiants/Ahmed/ressources-parcours", "/api/m5/etudiants/Ahmed/kit-revision?max=30",
     "/api/m5/agents", "/api/m5/agents-fiables", "/api/m5/agents-fiables?seuil=0.9",
     "/api/m5/agents/Tuteur_EduBot/profil", "/api/m5/recommandations/Omar",
+    "/api/m6/parcours", "/api/m6/parcours/recherche?q=sql", "/api/m6/parcours/Parcours_FullStack/cours",
+    "/api/m6/parcours/Parcours_FullStack/etudiants", "/api/m6/etudiants/Ahmed/parcours",
+    "/api/m6/etudiants/Omar/indicateurs", "/api/m6/etudiants/Omar/profil-risque",
+    "/api/m6/etudiants/Omar/recommandation", "/api/m6/etudiants-a-risque?seuil=0.6", "/api/m6/alertes",
+    "/api/m6/alertes?etudiant=Sarra&toutes=true", "/api/m6/suivi", "/api/m6/statistiques",
 ]
 
 
@@ -120,6 +125,12 @@ def test_creation_metier_refusee(metier):
     ("Quelles ressources utilise le cours Angular ?", "ressources_cours"),
     ("Ressources de moins de 30 minutes", "ressources_courtes"),
     ("Quelles ressources du parcours d'Ahmed ?", "ressources_parcours_etudiant"),
+    ("Quels sont les indicateurs d'Omar ?", "indicateurs_etudiant"),
+    ("Qui suit le parcours Full-Stack ?", "etudiants_parcours"),
+    ("Quel parcours suit Ahmed ?", "parcours_etudiant"),
+    ("Quelles sont les alertes ?", "alertes_indicateurs"),
+    ("Quel parcours conseiller à Omar ?", "recommandation_parcours"),
+    ("Quels cours comprend le parcours Full-Stack ?", "cours_parcours"),
 ])
 def test_non_regression_nlp(question, intention):
     r = client.post("/api/ask", json={"question": question}).json()
@@ -240,3 +251,115 @@ def test_ask_fautes_contexte_et_securite():
     from app.routers.nlp import verifier_select
     with pytest.raises(ValueError):
         verifier_select("DELETE WHERE { ?s ?p ?o }")
+
+
+def test_m6_alertes_dans_le_bon_sens():
+    alertes = {(a["etudiant"], a["type"]) for a in client.get("/api/m6/alertes").json()}
+    assert {("Omar", "TauxAssiduite"), ("Omar", "TauxReussite"), ("Omar", "NiveauStress"),
+            ("Lina", "TempsConnexion")} <= alertes
+    assert not any(e in ("Ahmed", "Sarra", "Yassine") for e, _ in alertes)
+    # stress de Sarra : 0,4 < 0,7 -> pas d'alerte (bien-être : valeur haute = alerte)
+    sarra = client.get("/api/m6/alertes", params={"etudiant": "Sarra", "toutes": True}).json()
+    assert [(x["type"], x["alerte"], x["sens"]) for x in sarra] == [("NiveauStress", False, "valeur haute = alerte")]
+    stats = {x["type"]: x for x in client.get("/api/m6/statistiques").json()}
+    assert stats["NiveauStress"]["nbMesures"] == 2 and stats["NiveauStress"]["nbAlertes"] == 1
+    suivi = {x["etudiant"]: x for x in client.get("/api/m6/suivi").json()}
+    assert suivi["Omar"]["nbAlertes"] == 3 and suivi["Omar"]["aRisque"] is True
+    assert suivi["Ahmed"]["nbAlertes"] == 0 and suivi["Ahmed"]["parcours"] == "Parcours_FullStack"
+
+
+def test_m6_parcours_et_profil():
+    assert {x["etudiant"] for x in client.get("/api/m6/parcours/Parcours_FullStack/etudiants").json()} == {"Ahmed", "Yassine"}
+    catalogue = {x["parcours"]: x for x in client.get("/api/m6/parcours").json()}
+    assert catalogue["Parcours_FullStack"]["nbCours"] == 4 and catalogue["Parcours_FullStack"]["nbEtudiants"] == 2
+    assert catalogue["Parcours_Excellence_IA"]["type"] == "ParcoursExcellence"
+    assert [x["parcours"] for x in client.get("/api/m6/parcours/recherche", params={"q": "RAT"}).json()] == ["Parcours_RattrapageSQL"]
+    valides = {x["cours"]: x["valide"] for x in client.get("/api/m6/etudiants/Ahmed/parcours").json()}
+    assert valides["JavaScript"] is True and valides["Angular"] is False
+    profil = {x["classe"]: x["origine"] for x in client.get("/api/m6/etudiants/Omar/profil-risque").json()}
+    assert profil["EtudiantARisque"] == "déduite par HermiT" and profil["Etudiant"] == "affirmée"
+
+
+def test_m6_recommandation():
+    omar = client.get("/api/m6/etudiants/Omar/recommandation").json()      # SQL raté (8,5)
+    assert omar[0]["parcours"] == "Parcours_RattrapageSQL" and omar[0]["coursCibles"] == "SQL"
+    lina = client.get("/api/m6/etudiants/Lina/recommandation").json()      # alerte, aucune note
+    assert lina[0]["parcours"] == "Parcours_RattrapageSQL" and lina[0]["motif"] == "indicateur en alerte"
+    ahmed = client.get("/api/m6/etudiants/Ahmed/recommandation").json()    # aucune alerte
+    assert [x["parcours"] for x in ahmed] == ["Parcours_Excellence_IA"]
+
+
+def test_m6_creation_modification_suppression():
+    indicateur = {"id": "Stress_Test_M6", "type": "NiveauStress", "etudiant": "Yassine",
+                  "valeur": 0.9, "seuilAlerte": 0.7, "sourceDonnees": "Questionnaire test"}
+    parcours = {"id": "Parcours_Test_M6", "type": "ParcoursExcellence", "nomParcours": "Parcours test",
+                "codeParcours": "PTEST6", "dureeSemestres": 1, "cours": ["SQL", "Angular"], "formation": "Ingenieur_TWIN"}
+
+    def alertes_yassine():
+        return {x["indicateur"] for x in client.get("/api/m6/alertes", params={"etudiant": "Yassine"}).json()}
+    try:
+        r = client.post("/api/m6/indicateurs", json=indicateur)
+        assert r.status_code == 201, r.text
+        assert r.json()["alerte"] is True and "Stress_Test_M6" in alertes_yassine()
+        assert client.post("/api/m6/indicateurs", json=indicateur).status_code == 400            # identifiant pris
+        r = client.put("/api/m6/indicateurs/Stress_Test_M6", json={"valeur": 0.3})
+        assert r.status_code == 200 and r.json()["alerte"] is False
+        assert "Stress_Test_M6" not in alertes_yassine()
+
+        assert client.post("/api/m6/parcours", json=parcours).status_code == 201
+        assert {x["cours"] for x in client.get("/api/m6/parcours/Parcours_Test_M6/cours").json()} == {"SQL", "Angular"}
+
+        url = "/api/m6/etudiants/Omar/parcours"
+        assert client.put(url, json={"parcours": "Parcours_RattrapageSQL"}).status_code == 200
+        assert {x["parcours"] for x in client.get(url).json()} == {"Parcours_RattrapageSQL"}
+        assert client.get("/api/m6/etudiants/Omar/recommandation").json()[0]["dejaSuivi"] is True
+        assert client.put(url, json={"parcours": "Parcours_Test_M6"}).status_code == 200           # changement
+        assert {x["parcours"] for x in client.get(url).json()} == {"Parcours_Test_M6"}
+    finally:
+        client.put("/api/m6/etudiants/Omar/parcours", json={})
+        client.delete("/api/individus/Stress_Test_M6")
+        client.delete("/api/individus/Parcours_Test_M6")
+    assert client.get("/api/m6/etudiants/Omar/parcours").json() == []
+
+
+@pytest.mark.parametrize("corps", [
+    {"valeur": 1.5},
+    {"seuilAlerte": -0.1},
+    {"type": "EtudiantARisque"},
+    {"type": "IndicateurApprentissage_Inconnu"},
+    {"etudiant": "Angular"},
+    {"id": "x} ; DROP"},
+    {"periodeMesure": "Annuelle"},
+    {"dateMesure": "28/10/2026"},
+])
+def test_m6_creation_indicateur_refusee(corps):
+    base = {"id": "Indicateur_Refuse", "type": "TauxAssiduite", "etudiant": "Lina", "valeur": 0.5, "seuilAlerte": 0.6}
+    assert client.post("/api/m6/indicateurs", json={**base, **corps}).status_code in (400, 422)
+
+
+@pytest.mark.parametrize("url, corps", [
+    ("/api/m6/parcours", {"id": "P_Refuse", "type": "ParcoursExcellence", "nomParcours": "Refusé", "codeParcours": "PREF",
+                          "dureeSemestres": 1, "cours": ["SQL", "SQL"]}),                  # comprendCours min 2
+    ("/api/m6/parcours", {"id": "P_Refuse", "type": "Cours", "nomParcours": "Refusé", "codeParcours": "PREF",
+                          "dureeSemestres": 1, "cours": ["SQL", "Angular"]}),
+    ("/api/m6/parcours", {"id": "P_Refuse", "type": "ParcoursExcellence", "nomParcours": "Refusé", "codeParcours": "PREF",
+                          "dureeSemestres": 0, "cours": ["SQL", "Angular"]}),
+])
+def test_m6_creation_parcours_refusee(url, corps):
+    assert client.post(url, json=corps).status_code in (400, 422)
+
+
+def test_m6_erreurs():
+    assert client.get("/api/m6/etudiants/Angular/indicateurs").status_code == 404
+    assert client.get("/api/m6/parcours/Ahmed/etudiants").status_code == 404
+    assert client.put("/api/m6/indicateurs/Ahmed", json={"valeur": 0.5}).status_code == 404
+    assert client.put("/api/m6/etudiants/Omar/parcours", json={"parcours": "SQL"}).status_code == 400
+
+
+def test_m6_nlp_resultats():
+    r = client.post("/api/ask", json={"question": "Quelles sont les alertes ?"}).json()
+    assert {x["etudiant"] for x in r["resultats"]} == {"Omar", "Lina"}
+    r = client.post("/api/ask", json={"question": "Quel parcours conseiller à Omar ?"}).json()
+    assert r["parametres"] == {"etudiant": "Omar"} and r["resultats"][0]["cours"] == "SQL"
+    r = client.post("/api/ask", json={"question": "Et son parcours ?", "contexte": [{"id": "Ahmed"}]}).json()
+    assert r["intention"] == "parcours_etudiant" and r["parametres_du_contexte"] == {"etudiant": "Ahmed"}

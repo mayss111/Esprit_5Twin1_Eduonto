@@ -49,8 +49,8 @@ INTENTS = [
 
     {"name": "indicateurs_etudiant", "membre": 6,
      "description": "les indicateurs d'apprentissage d'un étudiant (assiduité, réussite, stress)",
-     "keywords": ["indicateur", "indicateurs", "comment va", "situation", "suivi", "mesures", "assiduite",
-                  "stress", "reussite", "participation"],
+     "keywords": ["indicateur", "indicateurs", "comment", "comment va", "porte", "situation", "suivi", "mesures",
+                  "assiduite", "stress", "reussite", "participation"],
      "mots_requis": [["indicateur", "indicateurs", "comment", "situation", "suivi", "mesures", "assiduite",
                       "stress", "reussite", "participation"]],
      "slots": {"etudiant": "Etudiant"},
@@ -93,5 +93,5 @@ INTENTS = [
   OPTIONAL {{ edu:{etudiant} edu:aPasse ?evaluation . ?cours edu:estEvaluePar ?evaluation .
              ?evaluation edu:note ?note }}
   FILTER NOT EXISTS {{ edu:{etudiant} edu:aValide ?cours }}
-}} ORDER BY ?note ?parcours"""},
+}} ORDER BY DESC(BOUND(?note)) ?note ?parcours"""},
 ]

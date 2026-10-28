@@ -73,7 +73,7 @@ def rapport(resultats, jeu, avant=None, absentes=()):
     total = len(jeu)
     md = ["# Évaluation du module NLP (question → intention → SPARQL)", "",
           f"Jeu de test : `tests/questions_test.json` — **{total} questions** rédigées différemment des exemples "
-          "(membres 1 à 4 + commun), dont fautes de frappe, comparaisons, valeurs d'énumération et suites de conversation.",
+          "(membres 1 à 6 + commun), dont fautes de frappe, comparaisons, valeurs d'énumération et suites de conversation.",
           "", "- **Intention** : la bonne intention est choisie.",
           "- **Intention + paramètres** : l'intention ET tous les paramètres attendus (entité, nombre, opérateur, valeur) sont corrects.",
           "", "## Comparaison des configurations", "",
