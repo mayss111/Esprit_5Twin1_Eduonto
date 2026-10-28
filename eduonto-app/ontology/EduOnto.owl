@@ -2324,6 +2324,7 @@
   <contientCours rdf:resource="#WebSemantique"/>
   <contientCours rdf:resource="#Anglais"/>
   <proposeParcours rdf:resource="#Parcours_Donnees"/>
+  <proposeParcours rdf:resource="#Parcours_Excellence_IA"/>
   <intituleFormation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Data Science</intituleFormation>
   <dureeAnnees rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</dureeAnnees>
   <nbCreditsTotal rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">120</nbCreditsTotal>
@@ -2849,6 +2850,47 @@
   <sourceDonnees rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Questionnaire bien-être</sourceDonnees>
 </owl:NamedIndividual>
 
+<owl:NamedIndividual rdf:about="#Parcours_Excellence_IA">
+  <rdf:type rdf:resource="#ParcoursExcellence"/>
+  <comprendCours rdf:resource="#Algorithmique"/>
+  <comprendCours rdf:resource="#BaseDeDonnees"/>
+  <comprendCours rdf:resource="#WebSemantique"/>
+  <nomParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Excellence IA et données</nomParcours>
+  <dureeSemestres rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</dureeSemestres>
+  <codeParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">P-EXC-IA</codeParcours>
+  <objectifParcours rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Approfondir l'IA symbolique et les données pour les étudiants sans difficulté</objectifParcours>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Stress_Omar">
+  <rdf:type rdf:resource="#NiveauStress"/>
+  <concerne rdf:resource="#Omar"/>
+  <valeur rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.82</valeur>
+  <seuilAlerte rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.7</seuilAlerte>
+  <dateMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-01T08:00:00.000</dateMesure>
+  <periodeMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mensuelle</periodeMesure>
+  <sourceDonnees rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Questionnaire bien-être</sourceDonnees>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Participation_Yassine">
+  <rdf:type rdf:resource="#TauxParticipation"/>
+  <concerne rdf:resource="#Yassine"/>
+  <valeur rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.75</valeur>
+  <seuilAlerte rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</seuilAlerte>
+  <dateMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-01T08:00:00.000</dateMesure>
+  <periodeMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mensuelle</periodeMesure>
+  <sourceDonnees rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Plateforme de cours</sourceDonnees>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Connexion_Lina">
+  <rdf:type rdf:resource="#TempsConnexion"/>
+  <concerne rdf:resource="#Lina"/>
+  <valeur rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3</valeur>
+  <seuilAlerte rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.4</seuilAlerte>
+  <dateMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-10-01T08:00:00.000</dateMesure>
+  <periodeMesure rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hebdomadaire</periodeMesure>
+  <sourceDonnees rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Plateforme de cours</sourceDonnees>
+</owl:NamedIndividual>
+
 <owl:NamedIndividual rdf:about="#Tuteur_EduBot">
   <rdf:type rdf:resource="#TuteurConversationnel"/>
   <assiste rdf:resource="#Omar"/>
@@ -3020,6 +3062,10 @@
     <rdf:Description rdf:about="#Assiduite_Ahmed"/>
     <rdf:Description rdf:about="#Reussite_Omar"/>
     <rdf:Description rdf:about="#Stress_Sarra"/>
+    <rdf:Description rdf:about="#Parcours_Excellence_IA"/>
+    <rdf:Description rdf:about="#Stress_Omar"/>
+    <rdf:Description rdf:about="#Participation_Yassine"/>
+    <rdf:Description rdf:about="#Connexion_Lina"/>
     <rdf:Description rdf:about="#Tuteur_EduBot"/>
     <rdf:Description rdf:about="#Moteur_Reco"/>
     <rdf:Description rdf:about="#Correcteur_AutoCode"/>
