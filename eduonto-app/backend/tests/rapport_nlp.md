@@ -9,13 +9,12 @@ Jeu de test : `tests/questions_test.json` — **94 questions** rédigées diffé
 
 | Configuration | Intention | Intention + paramètres | Temps moyen |
 |---|---|---|---|
-| Avant améliorations — mots-clés seuls | 56.5 % | 47.8 % | 4 ms |
-| mots-clés seuls | 84.0 % | 84.0 % | 8 ms |
-| + fautes de frappe (rapidfuzz) | 91.5 % | 91.5 % | 8 ms |
+| mots-clés seuls | 84.0 % | 84.0 % | 3 ms |
+| + fautes de frappe (rapidfuzz) | 91.5 % | 91.5 % | 3 ms |
+| + embeddings (sentence-transformers) | 93.6 % | 93.6 % | 13 ms |
+| + zero-shot (Hugging Face) | 93.6 % | 93.6 % | 57 ms |
 
-Configurations non mesurées (module non installé ou non activé) : embeddings (EDUONTO_EMB=1), zero-shot (EDUONTO_HF=1).
-
-## Détail de la configuration la plus complète : + fautes de frappe (rapidfuzz)
+## Détail de la configuration la plus complète : + zero-shot (Hugging Face)
 
 ### Par catégorie de question
 
@@ -27,8 +26,8 @@ Configurations non mesurées (module non installé ou non activé) : embeddings 
 | comparaison | 8 | 100.0 % | 100.0 % |
 | enumeration | 6 | 100.0 % | 100.0 % |
 | faute | 9 | 77.8 % | 77.8 % |
-| reformulation | 6 | 33.3 % | 33.3 % |
-| simple | 44 | 97.7 % | 97.7 % |
+| reformulation | 6 | 50.0 % | 50.0 % |
+| simple | 44 | 100.0 % | 100.0 % |
 | suite | 9 | 100.0 % | 100.0 % |
 
 ### Par intention
@@ -55,7 +54,7 @@ Configurations non mesurées (module non installé ou non activé) : embeddings 
 | `etudiants_option` | 1 | 100.0 % | 100.0 % |
 | `etudiants_parcours` | 2 | 50.0 % | 50.0 % |
 | `evaluations_note` | 4 | 100.0 % | 100.0 % |
-| `evaluations_rattrapage` | 2 | 50.0 % | 50.0 % |
+| `evaluations_rattrapage` | 2 | 100.0 % | 100.0 % |
 | `evaluations_session` | 1 | 100.0 % | 100.0 % |
 | `formation_etudiant` | 4 | 100.0 % | 100.0 % |
 | `indicateurs_etudiant` | 3 | 66.7 % | 66.7 % |
@@ -64,7 +63,7 @@ Configurations non mesurées (module non installé ou non activé) : embeddings 
 | `metiers_niveau` | 3 | 66.7 % | 66.7 % |
 | `moyenne_etudiant` | 5 | 100.0 % | 100.0 % |
 | `moyenne_notes` | 2 | 100.0 % | 100.0 % |
-| `nb_competences_metier` | 2 | 50.0 % | 50.0 % |
+| `nb_competences_metier` | 2 | 100.0 % | 100.0 % |
 | `nb_etudiants_formation` | 3 | 100.0 % | 100.0 % |
 | `nb_etudiants_par_formation` | 1 | 100.0 % | 100.0 % |
 | `notes_etudiant` | 3 | 100.0 % | 100.0 % |
@@ -82,24 +81,20 @@ Configurations non mesurées (module non installé ou non activé) : embeddings 
 
 ### Matrice des erreurs (attendue → obtenue)
 
-| attendue \ obtenue | `metiers_en_tension` | `non comprise` | `prerequis_cours` |
-|---|---|---|---|
-| `encadrant_etudiant` |  | 1 |  |
-| `etudiants_parcours` |  | 1 |  |
-| `evaluations_rattrapage` |  | 1 |  |
-| `indicateurs_etudiant` |  | 1 |  |
-| `metiers_niveau` | 1 |  |  |
-| `nb_competences_metier` | 1 |  |  |
-| `prerequis_cours` |  | 1 |  |
-| `prerequis_manquants` |  |  | 1 |
+| attendue \ obtenue | `cours_avances` | `cours_suivants` | `formation_etudiant` | `metiers_en_tension` | `non comprise` | `prerequis_cours` |
+|---|---|---|---|---|---|---|
+| `encadrant_etudiant` |  |  | 1 |  |  |  |
+| `etudiants_parcours` | 1 |  |  |  |  |  |
+| `indicateurs_etudiant` |  |  |  |  | 1 |  |
+| `metiers_niveau` |  |  |  | 1 |  |  |
+| `prerequis_cours` |  | 1 |  |  |  |  |
+| `prerequis_manquants` |  |  |  |  |  | 1 |
 
 | Question | Attendu | Obtenu | Méthode |
 |---|---|---|---|
-| Lina est encadrée par quel enseignant ? | encadrant_etudiant {"etudiant": "Lina"} | None {} | — |
-| De quoi dépend le cours Web sémantique ? | prerequis_cours {"cours": "WebSemantique"} | None {} | — |
-| Sarra a-t-elle les prérequis pour Angular ? | prerequis_manquants {"etudiant": "Sarra", "cours": "Angular"} | prerequis_cours {"cours": "Angular"} | mots-clés |
-| Un ingénieur peut prétendre à quels métiers ? | metiers_niveau {"niveau": "Ingénieur"} | metiers_en_tension {} | mots-clés |
-| Quel métier demande le plus de compétences ? | nb_competences_metier {} | metiers_en_tension {} | mots-clés |
-| Quels étudiants ont raté leur examen ? | evaluations_rattrapage {} | None {} | — |
+| Lina est encadrée par quel enseignant ? | encadrant_etudiant {"etudiant": "Lina"} | formation_etudiant {"etudiant": "Lina"} | similarité sémantique |
+| De quoi dépend le cours Web sémantique ? | prerequis_cours {"cours": "WebSemantique"} | cours_suivants {"cours": "WebSemantique"} | similarité sémantique |
+| Sarra a-t-elle les prérequis pour Angular ? | prerequis_manquants {"etudiant": "Sarra", "cours": "Angular"} | prerequis_cours {"cours": "Angular"} | mots-clés + sémantique |
+| Un ingénieur peut prétendre à quels métiers ? | metiers_niveau {"niveau": "Ingénieur"} | metiers_en_tension {} | mots-clés + sémantique |
 | Quel est le suivi de Lnia ? | indicateurs_etudiant {"etudiant": "Lina"} | None {} | — |
-| Qui suit le parcours Donnes ? | etudiants_parcours {"parcours": "Parcours_Donnees"} | None {} | — |
+| Qui suit le parcours Donnes ? | etudiants_parcours {"parcours": "Parcours_Donnees"} | cours_avances {} | similarité sémantique |
